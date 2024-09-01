@@ -30,6 +30,7 @@ buffer buff;								// buffer struct
 
 unsigned char isConnected;
 unsigned char isDebug;
+unsigned char isDevicePathChanged;
 
 char* devicePath = "/dev/ttyUSB0"; // devault device
 
@@ -100,7 +101,7 @@ License GPLv3+: GNU GPL Version 3 or later <http://gnu.org/licenses/gpl.html>.\
 /**
  * helper function to debug comunication
  */
-void debFillBufferTestData ( ) {
+inline void debFillBufferTestData ( ) {
 	memcpy ( buff.cpuLines[0], "52", 3 );
 	memcpy ( buff.cpuLines[1], "5200", 5 );
 	memcpy ( buff.cpuLines[2], "31", 3 );
@@ -179,7 +180,7 @@ void init_monitor ( ) {
 void close_monitor ( ) {
 	register unsigned short int counter = 0;
 
-	if (serialPort !=0 )
+	if ( serialPort != 0 )
 		closeSerial ( );
 
 	// free all allocated buffer
@@ -189,6 +190,9 @@ void close_monitor ( ) {
 		free ( buff.nvidiaLines[ counter ] );
 		free ( buff.systemLines[ counter ] );
 	}
+
+	if ( isDevicePathChanged != 0 )
+		free ( devicePath );
 }
 
 
@@ -215,6 +219,7 @@ int main (int argc, char** argv) {
 
 	serialPort = 0;
 	optionIndex = 0;
+	isDevicePathChanged = 0;
 	atexit(close_monitor); // exit handler for cleanup
 
 	// opt management
@@ -232,9 +237,12 @@ int main (int argc, char** argv) {
 				exit ( EXIT_SUCCESS );
 			case 'D':
 				isDebug = 1;
+				break;
 			case 'p':
 				devicePath = malloc ( sizeof ( optarg ) * strlen ( optarg ) );
 				memcpy ( devicePath, optarg, strlen ( optarg ) );
+				isDevicePathChanged = 1
+				break;
 		}
 	}
 
