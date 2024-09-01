@@ -19,10 +19,14 @@
 #ifndef S_BUFFER_H
 #define S_BUFFER_H
 
+
+
 #ifndef __CHAR8__TYPE__
     #define __CHAR8__TYPE__
     #define char8_t unsigned char
 #endif
+
+
 
 const char8_t protoVersion = 0x01;
 const char8_t protoSeperator = ',';

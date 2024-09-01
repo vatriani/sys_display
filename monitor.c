@@ -1,13 +1,20 @@
-/** * s_buffer.h Defines Data Struct for communication * Copyright © 2024 -
-  Niels Neumann  <vatriani.nn@googlemail.com> * * This program is free software:
-  you can redistribute it and/or modify * it under the terms of the GNU General
-  Public License as published by * the Free Software Foundation, either version
-  3 of the License, or * any later version. * * This program is distributed in
-  the hope that it will be useful, * but WITHOUT ANY WARRANTY; without even the
-  implied warranty of * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-  See the * GNU General Public License for more details. * * You should have
-  received a copy of the GNU General Public License * along with this program.
-  If not, see <http://www.gnu.org/licenses/>. */
+/**
+ * monitor.c Implements the watchdog for accuiring and sending data
+ * Copyright © 2024 - Niels Neumann  <vatriani.nn@googlemail.com>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 
 #include <stdlib.h>
@@ -70,7 +77,7 @@ void openSerial ( ) {
 /**
  * helper function for closing serial port
  */
-void closeSerial ( ) {
+inline void closeSerial ( ) {
 	close ( serialPort );
 }
 
@@ -78,7 +85,7 @@ void closeSerial ( ) {
 
 void writeSerial ( ) {
 	 char* buffer;
-	 char* iterator;
+	 register char* iterator;
 	 register unsigned int counter;
 
 	 buffer = malloc ( sizeof ( char8_t ) * 9 * strLength + sizeof ( char8_t ) * 2 );
@@ -142,8 +149,14 @@ void writeSerial ( ) {
 	 iterator -= sizeof ( char8_t );
 	 memcpy ( iterator, ( void* ) &protoLastByte, 1);
 
-	 printf ( buffer );
+#ifdef DEBUG
+	 if ( isDebug )
+	 	 printf ( buffer );
+#endif
+
 	 write ( serialPort, buffer, sizeof ( buffer ) );
+
+	 free ( buffer );
 }
 
 
