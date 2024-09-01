@@ -19,17 +19,20 @@
 #ifndef S_BUFFER_H
 #define S_BUFFER_H
 
-#define PROTO_VERSION 0x01
-#define SEPERATOR ,
-#define LASTBYTE 0x00
-#define ACC_BIT  0x01
-#define ERR_STR  0x02
-
-
 #ifndef __CHAR8__TYPE__
     #define __CHAR8__TYPE__
     #define char8_t unsigned char
 #endif
+
+const char8_t protoVersion = 0x01;
+const char8_t protoSeperator = ',';
+const char8_t protoLastByte = 0x00;
+const char8_t protoAcc = 0x01;
+const char8_t protoError = 0x02;
+
+
+
+const unsigned int strLength = 5;
 
 
 
