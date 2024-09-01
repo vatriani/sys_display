@@ -1,4 +1,4 @@
-#include "serialport.h"
+#include "serialport.hpp"
 
 SerialPort::SerialPort () {
 

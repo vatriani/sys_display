@@ -1,5 +1,5 @@
 /**
- * serialport.h Defines the SerialPort class as a communication handler
+ * serialbuffer.h Defines the buffer for data handling in program
  * Copyright © 2024 - Niels Neumann  <vatriani.nn@googlemail.com>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,16 +16,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef SERIALPORT_H
-#define SERIALPORT_H
+#ifndef DISPLAY_DATA_HPP
+#define DISPLAY_DATA_HPP
 
+#include <string>
 
+struct displayData {
+    std::string gpu_t;     // GPU Temp
+    std::string gpu_u;     // GPU Utilization
+    std::string gpu_p;     // GPU Powerdraw
 
-class SerialPort {
-private:
-public:
-    SerialPort ();
-    ~SerialPort ();
+    std::string cpu_t;      // CPU Temp
+    std::string cpu_c;      // CPU Clock
+    std::string cpu_u;      // CPU Utilization
+
+    std::string fan1;       // Fan1 RPM
+    std::string fan2;       // Fan2 RPM
+    std::string fan3;       // Fan3 RPM
+
+    std::string liquid_f;  // Fan RPM
+    std::string liquid_p;  // Pump RPM
+    std::string liquid_t;  // Liquid Temp
 };
 
 #endif

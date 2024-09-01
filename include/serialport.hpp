@@ -1,5 +1,5 @@
 /**
- * monitor.h Defines the Monitor class as main programm
+ * serialport.h Defines the SerialPort class as a communication handler
  * Copyright © 2024 - Niels Neumann  <vatriani.nn@googlemail.com>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,28 +16,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef MONITOR_H
-#define MONITOR_H
-
-#include "display.h"
-#include "serialport.h"
-#include "displayData.h"
+#ifndef SERIALPORT_HPP
+#define SERIALPORT_HPP
 
 
 
-class Monitor {
+class SerialPort {
 private:
-    Display* display;
-    SerialPort* serial;
-    displayData* data;
-
-
 public:
-    Monitor ( );
-    ~Monitor ( );
-
-    void mLoop ();
-    void parseSerial ( char* buff  );
+    SerialPort ();
+    ~SerialPort ();
 };
 
 #endif

@@ -16,8 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef DISPLAY_H
-#define DISPLAY_H
+#ifndef DISPLAY_HPP
+#define DISPLAY_HPP
 
 #include <Arduino.h>
 #include <U8g2lib.h>
