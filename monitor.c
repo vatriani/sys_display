@@ -76,6 +76,77 @@ void closeSerial ( ) {
 
 
 
+void writeSerial ( ) {
+	 char* buffer;
+	 char* iterator;
+	 register unsigned int counter;
+
+	 buffer = malloc ( sizeof ( char8_t ) * 9 * strLength + sizeof ( char8_t ) * 2 );
+	 iterator = buffer;
+
+	 memcpy ( iterator, ( void* ) &protoVersion , 1 );
+	 iterator += sizeof ( char8_t );
+
+	 for ( counter = 0; counter < 3; counter++ ) {
+		 memcpy (
+			 iterator,
+			 ( const char* ) buff.cpuLines[counter],
+			 sizeof ( char8_t ) * strlen ( ( const char* ) buff.cpuLines[counter] ) );
+		 iterator += sizeof ( char8_t ) * strlen ( ( const char* ) buff.cpuLines[counter] );
+		 memcpy (
+			 iterator,
+			 ( void* ) &protoSeperator,
+			 1 );
+		 iterator += sizeof ( char8_t );
+	 }
+
+	 for ( counter = 0; counter < 3; counter++ ) {
+		 memcpy (
+			 iterator,
+			 ( const char* ) buff.liquidLines[counter],
+			 sizeof ( char8_t ) * strlen ( ( const char* ) buff.liquidLines[counter] ) );
+		 iterator += sizeof ( char8_t ) * strlen ( ( const char* ) buff.liquidLines[counter] );
+		 memcpy (
+			 iterator,
+			 ( void* ) &protoSeperator,
+			 1 );
+		 iterator += sizeof ( char8_t );
+	 }
+
+	 for ( counter = 0; counter < 3; counter++ ) {
+		 memcpy (
+			 iterator,
+			 ( const char* ) buff.nvidiaLines[counter],
+			 sizeof ( char8_t ) * strlen ( ( const char* ) buff.nvidiaLines[counter] ) );
+		 iterator += sizeof ( char8_t ) * strlen ( ( const char* ) buff.nvidiaLines[counter] );
+		 memcpy (
+			 iterator,
+			 ( void* ) &protoSeperator,
+			 1 );
+		 iterator += sizeof ( char8_t );
+	 }
+
+	 for ( counter = 0; counter < 3; counter++ ) {
+		 memcpy (
+			 iterator,
+			 ( const char* ) buff.systemLines[counter],
+			 sizeof ( char8_t ) * strlen ( ( const char* ) buff.systemLines[counter] ) );
+		 iterator += sizeof ( char8_t ) * strlen ( ( const char* ) buff.systemLines[counter] );
+		 memcpy (
+			 iterator,
+			 ( void* ) &protoSeperator,
+			 1 );
+		 iterator += sizeof ( char8_t );
+	 }
+
+	 iterator -= sizeof ( char8_t );
+	 memcpy ( iterator, ( void* ) &protoLastByte, 1);
+
+	 printf ( buffer );
+	 write ( serialPort, buffer, sizeof ( buffer ) );
+}
+
+
 /**
  * output programname -h for help message
  */
@@ -158,7 +229,7 @@ void debOutputBuffer ( ) {
 void init_monitor ( ) {
 	isConnected = 0;
 	register unsigned short int counter = 0;
-	size_t allocSize = 5 * sizeof ( char8_t );
+	size_t allocSize = strLength * sizeof ( char8_t );
 
 	// creating buffersize for numbers
 	for (counter = 0; counter < 3; counter++ ) {
@@ -202,6 +273,8 @@ void loop_monitor ( ) {
 	if ( isDebug )
 		debOutputBuffer ( );
 #endif
+
+	writeSerial ( );
 }
 
 
@@ -241,7 +314,7 @@ int main (int argc, char** argv) {
 			case 'p':
 				devicePath = malloc ( sizeof ( optarg ) * strlen ( optarg ) );
 				memcpy ( devicePath, optarg, strlen ( optarg ) );
-				isDevicePathChanged = 1
+				isDevicePathChanged = 1;
 				break;
 		}
 	}
