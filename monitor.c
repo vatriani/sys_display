@@ -24,12 +24,14 @@
 
 
 
-int serialPort;				// serial port handler
-struct termios tty;			// struct for serial port settings
-buffer buff;				// buffer struct
+int serialPort;							// serial port handler
+struct termios tty;					// struct for serial port settings
+buffer buff;								// buffer struct
+
 unsigned char isConnected;
 unsigned char isDebug;
-const char* devicePath = "/dev/ttyUSB0";
+
+char* devicePath = "/dev/ttyUSB0"; // devault device
 
 
 
@@ -206,6 +208,7 @@ int main (int argc, char** argv) {
 		{ "help", no_argument, 0, 'h' },
 		{ "version", no_argument, 0, 'v' },
 		{ "debug", no_argument, 0, 'D' },
+		{ "port", required_argument, 0, 'p'},
 		{ 0, 0, 0, 0 },
 	};
 	int optionIndex;
@@ -216,7 +219,7 @@ int main (int argc, char** argv) {
 
 	// opt management
 	while (1) {
-		opt = getopt_long ( argc, argv, "hvD", longOptions, &optionIndex );
+		opt = getopt_long ( argc, argv, "hvDp:", longOptions, &optionIndex );
 
 		if ( opt == -1 ) break;
 
@@ -229,6 +232,9 @@ int main (int argc, char** argv) {
 				exit ( EXIT_SUCCESS );
 			case 'D':
 				isDebug = 1;
+			case 'p':
+				devicePath = malloc ( sizeof ( optarg ) * strlen ( optarg ) );
+				memcpy ( devicePath, optarg, strlen ( optarg ) );
 		}
 	}
 
