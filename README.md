@@ -1,24 +1,27 @@
-Some data informations...
-# Docs
-u8g2 Display libary
-https://github.com/olikraus/u8g2
+Monitor program runs on linux host system and fetches some vitals, sends it over
+serial port to an nodemcu witch displays the vitals on a small screen.
+The small screen switches automatically between displayed pages.
 
-# Compile for arduino
+## Compile
 `$ make`
+
+## Upload to nodemcu
 `$ pio run --target upload`
-# Compile for host system
-`$ make monitor`
+
+## Run watchdog
 `$ ./monitor`
 
-#Infos to display
-## nvidia
+## Infos to display
+### nvidia
 `nvidia-smi --query-gpu=temperature.gpu,utilization.gpu,power.draw --format=csv -l 5`
+
 Outputs:
 - GPU temperature
 - GPU utilization
 - Power draw
-## lm_sensors
+### lm_sensors
 `sensors -A -u`
+
 Outputs:
 - CPU temperature
 - CPU MHZ
@@ -27,9 +30,14 @@ Outputs:
 - Fan1
 - Fan2
 - Fan3
-## liquidctl
+### liquidctl
 `liquidctl status`
+
 Outputs:
 - Fanspeed
 - Pumpspeed
 - Watertemp
+
+## Libaries used
+### u8g2 Display libary
+https://github.com/olikraus/u8g2
