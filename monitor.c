@@ -1,21 +1,16 @@
-/**
- * monitor.c Implements the watchdog for accuiring and sending data
- * Copyright © 2024 - Niels Neumann  <vatriani.nn@googlemail.com>
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
- */
-
+ /**
+  *  \file       monitor.c
+  *  \brief      Implements the watchdog for accuiring and sending data.
+  *  \author     Niels Neumann
+  *  \version    0.1
+  *  \date       2024
+  *  \copyright  GNU Public License v3
+  *  \pre        First initialize the system.
+  *  \bug
+  *  \warning		 Early development
+	*  \deprecated
+  *  \todo       
+  */
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -30,16 +25,32 @@
 #include "include/s_buffer.h"
 
 
-
-int serialPort;							// serial port handler
-struct termios tty;					// struct for serial port settings
-buffer buff;								// buffer struct
-
+/// serial port handler
+int serialPort;
+/// struct for serial port settings
+struct termios tty;
+/// buffer struct
+buffer buff;
+/// holds value if connection is established
 unsigned char isConnected;
+/// holds value for activate debugging
 unsigned char isDebug;
+/// holds value for changed device
 unsigned char isDevicePathChanged;
+/// devault device
+char* devicePath = "/dev/ttyUSB0";
 
-char* devicePath = "/dev/ttyUSB0"; // devault device
+
+
+void getValues ( ) {
+
+}
+
+
+
+void parseToBuffer ( char ** out ) {
+
+}
 
 
 
@@ -75,7 +86,7 @@ void openSerial ( ) {
 
 
 /**
- * helper function for closing serial port
+ * \brief helper function for closing serial port
  */
 inline void closeSerial ( ) {
 	close ( serialPort );
@@ -83,6 +94,13 @@ inline void closeSerial ( ) {
 
 
 
+/**
+ * \brief Generates char buffer witch contains the parsed struct buffer and sending it
+ * over serial to the device.
+ * \todo
+ *   - simplify string copying with secound iterator for struct buffer.
+ *   - move string handling to parseToBuffer(char**) function.
+ */
 void writeSerial ( ) {
 	 char* buffer;
 	 register char* iterator;
@@ -161,7 +179,7 @@ void writeSerial ( ) {
 
 
 /**
- * output programname -h for help message
+ * Output monitor -h for help message
  */
 inline void showHelp ( ) {
 	printf ( "monitor for comunication with arduino sysmon\nuse: monitor\n\n" );
@@ -170,9 +188,9 @@ inline void showHelp ( ) {
 
 
 /**
- * output programname -v for version message
+ * Output monitor -v for version message
  */
-inline void showVersion( ) {
+inline void showVersion ( ) {
 	printf ( "monitor 0.1\nCopyright (C) 2024 Niels Neumann  <vatriani.nn@googlemail.com\n\
 License GPLv3+: GNU GPL Version 3 or later <http://gnu.org/licenses/gpl.html>.\
 \nThis is free software: you are free to change and redistribute it.\
@@ -183,21 +201,18 @@ License GPLv3+: GNU GPL Version 3 or later <http://gnu.org/licenses/gpl.html>.\
 
 #ifdef DEBUG
 /**
- * helper function to debug comunication
+ * DEBUG helper function to debug comunication
  */
 inline void debFillBufferTestData ( ) {
 	memcpy ( buff.cpuLines[0], "52", 3 );
 	memcpy ( buff.cpuLines[1], "5200", 5 );
 	memcpy ( buff.cpuLines[2], "31", 3 );
-
 	memcpy ( buff.liquidLines[0], "1200", 5 );
 	memcpy ( buff.liquidLines[1], "2100", 5 );
 	memcpy ( buff.liquidLines[2], "31", 3 );
-
 	memcpy ( buff.nvidiaLines[0], "60", 3 );
 	memcpy ( buff.nvidiaLines[1], "5", 2 );
 	memcpy ( buff.nvidiaLines[2], "15", 3 );
-
 	memcpy ( buff.systemLines[0], "518", 2 );
 	memcpy ( buff.systemLines[1], "0", 2 );
 	memcpy ( buff.systemLines[2], "0", 2 );
@@ -206,7 +221,7 @@ inline void debFillBufferTestData ( ) {
 
 
 /**
- * outputs buffer struct
+ * DEBUG outputs buffer struct
  */
 void debOutputBuffer ( ) {
 	register unsigned int counter = 0;
@@ -239,6 +254,9 @@ void debOutputBuffer ( ) {
 
 
 
+/**
+ * Reciever for arduino init() function.
+ */
 void init_monitor ( ) {
 	isConnected = 0;
 	register unsigned short int counter = 0;
@@ -261,6 +279,9 @@ void init_monitor ( ) {
 
 
 
+/*
+ * Helper function for cleanup memory and close the serial port.
+ */
 void close_monitor ( ) {
 	register unsigned short int counter = 0;
 
@@ -281,6 +302,14 @@ void close_monitor ( ) {
 
 
 
+/*
+ * Like arduino loop() function. Witch contains the main loop of
+ * recieving data from lm_sensors, parse data and sending it over serial.
+ * @TODO
+ *
+ * - generate while(1) loop
+ * - signal handling for SIGKILL
+ */
 void loop_monitor ( ) {
 #ifdef DEBUG
 	if ( isDebug )
@@ -306,7 +335,8 @@ int main (int argc, char** argv) {
 	serialPort = 0;
 	optionIndex = 0;
 	isDevicePathChanged = 0;
-	atexit(close_monitor); // exit handler for cleanup
+	// exit handler for cleanup
+	atexit(close_monitor);
 
 	// opt management
 	while (1) {
@@ -315,15 +345,19 @@ int main (int argc, char** argv) {
 		if ( opt == -1 ) break;
 
 		switch ( opt ) {
+
 			case 'h':
 				showHelp ( );
 				exit ( EXIT_SUCCESS );
+
 			case 'v':
 				showVersion ( );
 				exit ( EXIT_SUCCESS );
+
 			case 'D':
 				isDebug = 1;
 				break;
+
 			case 'p':
 				devicePath = malloc ( sizeof ( optarg ) * strlen ( optarg ) );
 				memcpy ( devicePath, optarg, strlen ( optarg ) );

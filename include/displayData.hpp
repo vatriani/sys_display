@@ -1,42 +1,53 @@
 /**
- * serialbuffer.h Defines the buffer for data handling in program
- * Copyright © 2024 - Niels Neumann  <vatriani.nn@googlemail.com>
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *  \file      serialbuffer.h
+ *  \brief     Defines the buffer for data handling in program.
+ *  \author    Niels Neumann
+ *  \version   0.1
+ *  \date      2024
+ *  \copyright GNU Public License v3
+ *  \pre
+ *  \bug
+ *  \warning
+ *  \deprecated
+ *  \todo
  */
-
 #ifndef DISPLAY_DATA_HPP
 #define DISPLAY_DATA_HPP
 
+
+
 #include <string>
 
+
+
+/**
+ * Data struct used to hold values for write to display.
+ */
 struct displayData {
-    std::string gpu_t;     // GPU Temp
-    std::string gpu_u;     // GPU Utilization
-    std::string gpu_p;     // GPU Powerdraw
-
-    std::string cpu_t;      // CPU Temp
-    std::string cpu_c;      // CPU Clock
-    std::string cpu_u;      // CPU Utilization
-
-    std::string fan1;       // Fan1 RPM
-    std::string fan2;       // Fan2 RPM
-    std::string fan3;       // Fan3 RPM
-
-    std::string liquid_f;  // Fan RPM
-    std::string liquid_p;  // Pump RPM
-    std::string liquid_t;  // Liquid Temp
+  /// GPU temperature in degree celsius
+  std::string gpu_t;
+  /// GPU utilization in percent
+  std::string gpu_u;
+  /// GPU powerdraw in watts
+  std::string gpu_p;
+  /// CPU temperature in degree celsius
+  std::string cpu_t;
+  /// CPU clockspeed in MHz
+  std::string cpu_c;
+  /// CPU utilization in percent
+  std::string cpu_u;
+  /// Fan 1 fanspeed in RPM
+  std::string fan1;
+  /// Fan 2 fanspeed in RPM
+  std::string fan2;
+  /// Fan 3 fanspeed in RPM
+  std::string fan3;
+  /// Radiator fanspeed in RPM
+  std::string liquid_f;
+  /// Pump speed in RPM
+  std::string liquid_p;
+  /// Water temperature in degree celsius
+  std::string liquid_t;
 };
 
 #endif
