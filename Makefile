@@ -1,8 +1,8 @@
 DEBUG := 1
 
-FLAGS=-Wall -mtune=native -march=native
-SRCS=monitor.c
-TARGET=monitor
+FLAGS = -Wall -mtune=native -march=native
+SRCS = monitor.c
+TARGET = monitor
 
 ifeq ($(DEBUG),1)
 FLAGS += -O -g -DDEBUG
@@ -23,6 +23,9 @@ upload:
 
 run:
 	./$(TARGET)
+
+doc:
+	doxygen
 
 clean:
 	rm -f *.d *.o $(TARGET)
