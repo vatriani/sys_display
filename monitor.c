@@ -98,7 +98,7 @@ inline void closeSerial ( ) {
 
 
 /**
- * \brief Generates char buffer witch contains the parsed struct buffer and sending it
+ * \brief Generates char buffer whitch contains the parsed struct buffer and sending it
  * over serial to the device.
  * \todo
  *   - simplify string copying with secound iterator for struct buffer.
@@ -306,7 +306,7 @@ void close_monitor ( ) {
 
 
 /*
- * Like arduino loop() function. Witch contains the main loop of
+ * Like arduino loop() function. whitch contains the main loop of
  * recieving data from lm_sensors, parse data and sending it over serial.
  * @TODO
  *
@@ -347,7 +347,7 @@ int main (int argc, char** argv) {
 
 		if ( opt == -1 ) break;
 
-		switch ( opt ) {
+		swhitch ( opt ) {
 
 			case 'h':
 				showHelp ( );
