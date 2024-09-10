@@ -9,7 +9,7 @@
   *  \bug
   *  \warning		 Early development
 	*  \deprecated
-  *  \todo       
+  *  \todo
   */
 
 #include <stdlib.h>
@@ -61,7 +61,10 @@ void openSerial ( ) {
 	serialPort = open ( devicePath, O_RDWR );
 
 	if ( serialPort < 0 ) {
-		printf ( "Error %i from open: %s\n", errno, strerror ( errno ) );
+		if ( errno == 2 )
+			printf ( "No such device: %s\n", devicePath );
+		else
+			printf ( "Error %i from open: %s\n", errno, strerror ( errno ) );
 		exit( errno );
 	}
 
