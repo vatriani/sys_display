@@ -9,7 +9,7 @@
   *  \bug
   *  \warning		 Early development
 	*  \deprecated
-  *  \todo
+	*  \todo			 CPU value for utilization
   */
 
 #include <stdlib.h>
@@ -37,10 +37,10 @@ unsigned char isConnected;
 unsigned char isDebug;
 /// holds value for changed device
 unsigned char isDevicePathChanged;
-/// devault device
+/// default device
 char* devicePath = "/dev/ttyUSB0";
 /// valid commands eg. whitelist for used systemprogramms
-char* execProgramms[9] = {
+const char* execProgramms[9] = {
 	"top",
 	"cat",
 	"sensors",
