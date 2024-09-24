@@ -41,11 +41,64 @@ unsigned char isDebug;
 unsigned char isDevicePathChanged;
 /// devault device
 char* devicePath = "/dev/ttyUSB0";
+/// valid commands eg. whitelist for used systemprogramms
+char* execProgramms[9] = {
+	"top",
+	"cat",
+	"sensors",
+	"nvidia-smi",
+	"liquidctl",
+	"grep",
+	"cut",
+	"tail",
+	"head"
+};
 
 
 
 /**
- * Run a system command localy and the return is written in rstr.
+ * \brief Checks if valid commands is set. Block unwanted commands.
+ */
+unsigned int checkForValidCommand ( char* command ) {
+	char testCommand[100];
+	char* myPtr;
+	register unsigned int validCommandCounter;
+	unsigned int countCommands;
+	unsigned int ret;
+
+	strcpy (testCommand, command);
+	ret = 0;
+	countCommands = 0;
+	myPtr = strtok ( testCommand, "|" );
+
+	while ( myPtr != NULL ) {
+		validCommandCounter = 0;
+		countCommands++;
+
+		// remove whitespace in front of command
+		myPtr += strspn ( myPtr , " " );
+
+		// iterate over all valid commands
+		for ( ; validCommandCounter < 9; validCommandCounter++ ) {
+			if ( strncmp ( myPtr, execProgramms[validCommandCounter], strlen (execProgramms[validCommandCounter]) ) == 0 )
+				ret += 1;
+		}
+		
+		myPtr = strtok ( NULL, "|" );
+	}
+
+#ifdef DEBUG
+	printf("counted commands %i, counted valid commands %i\n", countCommands, ret );
+#endif
+
+	if ( ret == countCommands ) return 0;
+	else return 1;
+}
+
+
+
+/**
+ * \brief Run a system command localy and the return is written in rstr.
  * Used for single line Output.
  *
  * \param rstr pointer to return string
@@ -54,6 +107,11 @@ char* devicePath = "/dev/ttyUSB0";
 void getLineFromCommand ( char** rstr, char* command ) {
 	FILE *fp;
   char retstr[1035];
+
+	if ( checkForValidCommand ( command ) ) {
+		printf ( "No valid command or isn't listed in whitelist.\n" );
+		exit ( EXIT_FAILURE );
+	}
 
 	// Open the command for reading
   fp = popen ( command, "r" );
@@ -72,8 +130,9 @@ void getLineFromCommand ( char** rstr, char* command ) {
 }
 
 
+
 /**
- * Run a system command localy and the return is written in rstr.
+ * \brief Run a system command localy and the return is written in rstr.
  * Used for multiple line Output. Lines are divided by comma.
  *
  * \param rstr pointer to return string
@@ -83,6 +142,11 @@ void getLinesFromCommand ( char** rstr, char* command ) {
   FILE *fp;
   char retstr[1035];
 	char strbuff[6000];
+
+	if ( checkForValidCommand ( command ) ) {
+		printf ( "No valid command or isn't listed in whitelist.\n" );
+		exit ( EXIT_FAILURE );
+	}
 
   // Open the command for reading
   fp = popen ( command, "r" );
@@ -106,8 +170,9 @@ void getLinesFromCommand ( char** rstr, char* command ) {
 }
 
 
+
 /**
- * Reads and calculates CPU values.
+ * \brief Reads and calculates CPU values.
  */
 void getCpuValues ( ) {
 	char* commandRet;
@@ -115,26 +180,26 @@ void getCpuValues ( ) {
 	getLineFromCommand (
 		&commandRet,
 		"cat /proc/cpuinfo | grep \"cpu MHz\" | head -n1 | cut -d\" \" -f3 | cut -d\".\" -f1");
-
 	memcpy ( (void*) buff.cpuLines[1], commandRet, strlen ( commandRet ) - 1 );
 
 	getLineFromCommand (
 		&commandRet,
 		"sensors | grep Tctl | cut -d\"+\" -f2" );
-
 	memcpy ( (void*) buff.cpuLines[0], commandRet, strlen ( commandRet ) -6  );
 
 	getLineFromCommand (
 		&commandRet,
 		"top -n1 | head -n3 | tail -n1 | cut -d\" \" -f11" );
-
 	float tmp = atof ( commandRet );
-		gcvt( 100.0 - tmp ,4 , (char*) buff.cpuLines[2]);
+	gcvt( 100.0 - tmp ,4 , (char*) buff.cpuLines[2]);
+
+	free ( commandRet );
 }
 
 
+
 /**
- * Reads and calculates GPU values.
+ * \brief Reads and calculates GPU values.
  */
 void getGpuValues ( ) {
 	char* commandRet;
@@ -143,7 +208,7 @@ void getGpuValues ( ) {
 
   getLineFromCommand (
 		&commandRet,
-		"/usr/bin/nvidia-smi | head -n10 | tail -n1");
+		"nvidia-smi | head -n10 | tail -n1");
 
 	// divide string
 	myPtr = strtok( commandRet, " ");
@@ -170,8 +235,9 @@ void getGpuValues ( ) {
 }
 
 
+
 /**
- * Reads and calculates liquid values.
+ * \brief Reads and calculates liquid values.
  */
 void getLiquidctlValues ( ) {
 	char* commandRet;
@@ -180,7 +246,7 @@ void getLiquidctlValues ( ) {
 
 	getLinesFromCommand (
 		&commandRet,
-		"/usr/bin/liquidctl status | tail -n6 | head -n5");
+		"liquidctl status | tail -n6 | head -n5");
 
 	// divide string
 	myPtr = strtok( commandRet, " ");
@@ -202,11 +268,14 @@ void getLiquidctlValues ( ) {
   	myPtr = strtok(NULL, " ");
 		counter++;
 	}
+
+	free ( commandRet );
 }
 
 
+
 /**
- * Reads and calculates system values.
+ * \brief Reads and calculates system values.
  */
 void getSystemValues ( ) {
 	char* commandRet;
@@ -237,13 +306,16 @@ void getSystemValues ( ) {
 		myPtr = strtok(NULL, " ");
 		counter++;
 	}
+
+	free ( commandRet );
 }
 
 
+
 /**
- * Helperfunction to fetch all values. Only for better reading.
+ * \brief Helperfunction to fetch all values. Only for better reading.
  */
-inline void getValues ( ) {
+void getValues ( ) {
 	getCpuValues ( );
 	getGpuValues ( );
 	getLiquidctlValues ( );
@@ -251,8 +323,9 @@ inline void getValues ( ) {
 }
 
 
+
 /**
- * helper function for opening and settings for serial port comunication
+ * \brief Helper function for opening and settings for serial port comunication
  */
 void openSerial ( ) {
 	serialPort = open ( devicePath, O_RDWR );
@@ -284,12 +357,14 @@ void openSerial ( ) {
 }
 
 
+
 /**
- * \brief helper function for closing serial port
+ * \brief Helper function for closing serial port
  */
 inline void closeSerial ( ) {
 	close ( serialPort );
 }
+
 
 
 /**
@@ -304,7 +379,7 @@ void writeSerial ( ) {
 	 register char* iterator;
 	 register unsigned int counter;
 
-	 buffer = malloc ( sizeof ( char8_t ) * 9 * protoStrLength + sizeof ( char8_t ) * 2 );
+	 buffer = malloc ( sizeof ( char8_t ) * 12 * protoStrLength + sizeof ( char8_t ) * 2 );
 	 iterator = buffer;
 
 	 memcpy ( iterator, ( void* ) &protoVersion , 1 );
@@ -376,16 +451,18 @@ void writeSerial ( ) {
 }
 
 
+
 /**
- * Output monitor -h for help message
+ * \brief Output monitor -h for help message
  */
 inline void showHelp ( ) {
 	printf ( "monitor for comunication with arduino sysmon\nuse: monitor\n\n" );
 }
 
 
+
 /**
- * Output monitor -v for version message
+ * \brief Output monitor -v for version message
  */
 inline void showVersion ( ) {
 	printf ( "monitor 0.1\nCopyright (C) 2024 Niels Neumann  <vatriani.nn@googlemail.com\n\
@@ -395,9 +472,10 @@ License GPLv3+: GNU GPL Version 3 or later <http://gnu.org/licenses/gpl.html>.\
 }
 
 
+
 #ifdef DEBUG
 /**
- * DEBUG helper function to debug comunication
+ * \brief DEBUG helper function to debug comunication
  */
 inline void debFillBufferTestData ( ) {
 	memcpy ( buff.cpuLines[0], "52", 3 );
@@ -417,7 +495,7 @@ inline void debFillBufferTestData ( ) {
 
 
 /**
- * DEBUG outputs buffer struct
+ * \brief DEBUG outputs buffer struct
  */
 void debOutputBuffer ( ) {
 	printf("GPU Temp: %s\n    utilization: %s\n    Watt: %s\n",
@@ -440,8 +518,9 @@ void debOutputBuffer ( ) {
 #endif
 
 
+
 /**
- * Reciever for arduino init() function.
+ * \brief Reciever like arduino init() function.
  */
 void init_monitor ( ) {
 	isConnected = 0;
@@ -460,8 +539,9 @@ void init_monitor ( ) {
 }
 
 
+
 /*
- * Helper function for cleanup memory and close the serial port.
+ * \brief Helper function for cleanup memory and close the serial port.
  * Get automatically called everytime a exit() is used.
  */
 void close_monitor ( ) {
@@ -483,8 +563,9 @@ void close_monitor ( ) {
 }
 
 
+
 /**
- * Like arduino loop() function. whitch contains the main loop of
+ * \brief Like arduino loop() function. whitch contains the main loop of
  * recieving data from lm_sensors, parse data and sending it over serial.
  */
 void loop_monitor ( ) {
@@ -500,8 +581,9 @@ void loop_monitor ( ) {
 }
 
 
+
 /**
- * Overrides signal handling for strg+c.
+ * \brief Overrides signal handling for strg+c.
  */
 void sig_handler(int signo) {
   if (signo == SIGINT) {
@@ -509,6 +591,7 @@ void sig_handler(int signo) {
 		exit ( EXIT_SUCCESS );
 	}
 }
+
 
 
 int main (int argc, char** argv) {
