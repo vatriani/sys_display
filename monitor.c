@@ -44,6 +44,13 @@ char* devicePath = "/dev/ttyUSB0";
 
 
 
+/**
+ * Run a system command localy and the return is written in rstr.
+ * Used for single line Output.
+ *
+ * \param rstr pointer to return string
+ * \param command runned command
+ */
 void getLineFromCommand ( char** rstr, char* command ) {
 	FILE *fp;
   char retstr[1035];
@@ -65,7 +72,13 @@ void getLineFromCommand ( char** rstr, char* command ) {
 }
 
 
-
+/**
+ * Run a system command localy and the return is written in rstr.
+ * Used for multiple line Output. Lines are divided by comma.
+ *
+ * \param rstr pointer to return string
+ * \param command runned command
+ */
 void getLinesFromCommand ( char** rstr, char* command ) {
   FILE *fp;
   char retstr[1035];
@@ -93,7 +106,9 @@ void getLinesFromCommand ( char** rstr, char* command ) {
 }
 
 
-
+/**
+ * Reads and calculates CPU values.
+ */
 void getCpuValues ( ) {
 	char* commandRet;
 
@@ -117,6 +132,10 @@ void getCpuValues ( ) {
 		gcvt( 100.0 - tmp ,4 , (char*) buff.cpuLines[2]);
 }
 
+
+/**
+ * Reads and calculates GPU values.
+ */
 void getGpuValues ( ) {
 	char* commandRet;
 	char* myPtr;
@@ -150,6 +169,10 @@ void getGpuValues ( ) {
 	free ( commandRet );
 }
 
+
+/**
+ * Reads and calculates liquid values.
+ */
 void getLiquidctlValues ( ) {
 	char* commandRet;
 	char* myPtr;
@@ -181,6 +204,10 @@ void getLiquidctlValues ( ) {
 	}
 }
 
+
+/**
+ * Reads and calculates system values.
+ */
 void getSystemValues ( ) {
 	char* commandRet;
 	char* myPtr;
@@ -212,13 +239,16 @@ void getSystemValues ( ) {
 	}
 }
 
-void getValues ( ) {
+
+/**
+ * Helperfunction to fetch all values. Only for better reading.
+ */
+inline void getValues ( ) {
 	getCpuValues ( );
 	getGpuValues ( );
 	getLiquidctlValues ( );
 	getSystemValues ( );
 }
-
 
 
 /**
@@ -254,14 +284,12 @@ void openSerial ( ) {
 }
 
 
-
 /**
  * \brief helper function for closing serial port
  */
 inline void closeSerial ( ) {
 	close ( serialPort );
 }
-
 
 
 /**
@@ -356,7 +384,6 @@ inline void showHelp ( ) {
 }
 
 
-
 /**
  * Output monitor -v for version message
  */
@@ -366,7 +393,6 @@ License GPLv3+: GNU GPL Version 3 or later <http://gnu.org/licenses/gpl.html>.\
 \nThis is free software: you are free to change and redistribute it.\
 \nThere is NO WARRANTY, to the extent permitted by law.\n\n" );
 }
-
 
 
 #ifdef DEBUG
@@ -414,7 +440,6 @@ void debOutputBuffer ( ) {
 #endif
 
 
-
 /**
  * Reciever for arduino init() function.
  */
@@ -432,16 +457,12 @@ void init_monitor ( ) {
 	}
 
 	openSerial ( );
-
-#ifdef DEBUG
-	//debFillBufferTestData ( );
-#endif
 }
-
 
 
 /*
  * Helper function for cleanup memory and close the serial port.
+ * Get automatically called everytime a exit() is used.
  */
 void close_monitor ( ) {
 	register unsigned short int counter = 0;
@@ -462,7 +483,6 @@ void close_monitor ( ) {
 }
 
 
-
 /**
  * Like arduino loop() function. whitch contains the main loop of
  * recieving data from lm_sensors, parse data and sending it over serial.
@@ -480,15 +500,15 @@ void loop_monitor ( ) {
 }
 
 
-
-void sig_handler(int signo)
-{
+/**
+ * Overrides signal handling for strg+c.
+ */
+void sig_handler(int signo) {
   if (signo == SIGINT) {
     printf("received SIGINT, closing watchdog\n");
 		exit ( EXIT_SUCCESS );
 	}
 }
-
 
 
 int main (int argc, char** argv) {
