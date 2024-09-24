@@ -276,7 +276,7 @@ void writeSerial ( ) {
 	 register char* iterator;
 	 register unsigned int counter;
 
-	 buffer = malloc ( sizeof ( char8_t ) * 9 * strLength + sizeof ( char8_t ) * 2 );
+	 buffer = malloc ( sizeof ( char8_t ) * 9 * protoStrLength + sizeof ( char8_t ) * 2 );
 	 iterator = buffer;
 
 	 memcpy ( iterator, ( void* ) &protoVersion , 1 );
@@ -421,7 +421,7 @@ void debOutputBuffer ( ) {
 void init_monitor ( ) {
 	isConnected = 0;
 	register unsigned short int counter = 0;
-	size_t allocSize = strLength * sizeof ( char8_t );
+	size_t allocSize = protoStrLength * sizeof ( char8_t );
 
 	// creating buffersize for numbers
 	for (counter = 0; counter < 3; counter++ ) {

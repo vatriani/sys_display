@@ -35,7 +35,7 @@ const char8_t protoError = 0x02;
 
 
 /// setting string lengh to 4 + ZERO by string definition
-const unsigned int strLength = 5;
+const unsigned int protoStrLength = 5;
 
 
 
