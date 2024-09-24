@@ -2,7 +2,7 @@
   *  \file       monitor.c
   *  \brief      Implements the watchdog for accuiring and sending data.
   *  \author     Niels Neumann
-  *  \version    0.2
+	*  \version    0.3
   *  \date       2024
   *  \copyright  GNU Public License v3
   *  \pre        First initialize the system.
@@ -29,8 +29,6 @@
 
 /// serial port handler
 int serialPort;
-/// struct for serial port settings
-struct termios tty;
 /// buffer struct
 buffer buff;
 /// holds value if connection is established
@@ -60,8 +58,8 @@ char* execProgramms[9] = {
  * \brief Checks if valid commands is set. Block unwanted commands.
  */
 unsigned int checkForValidCommand ( char* command ) {
-	char testCommand[100];
-	char* myPtr;
+	char testCommand[strlen ( command ) ];
+	char* iterator;
 	register unsigned int validCommandCounter;
 	unsigned int countCommands;
 	unsigned int ret;
@@ -69,22 +67,22 @@ unsigned int checkForValidCommand ( char* command ) {
 	strcpy (testCommand, command);
 	ret = 0;
 	countCommands = 0;
-	myPtr = strtok ( testCommand, "|" );
+	iterator = strtok ( testCommand, "|" );
 
-	while ( myPtr != NULL ) {
+	while ( iterator != NULL ) {
 		validCommandCounter = 0;
-		countCommands++;
+		++countCommands;
 
 		// remove whitespace in front of command
-		myPtr += strspn ( myPtr , " " );
+		iterator += strspn ( iterator , " " );
 
 		// iterate over all valid commands
 		for ( ; validCommandCounter < 9; validCommandCounter++ ) {
-			if ( strncmp ( myPtr, execProgramms[validCommandCounter], strlen (execProgramms[validCommandCounter]) ) == 0 )
+			if ( strncmp ( iterator, execProgramms[validCommandCounter], strlen (execProgramms[validCommandCounter]) ) == 0 )
 				ret += 1;
 		}
-		
-		myPtr = strtok ( NULL, "|" );
+
+		iterator = strtok ( NULL, "|" );
 	}
 
 #ifdef DEBUG
@@ -105,7 +103,7 @@ unsigned int checkForValidCommand ( char* command ) {
  * \param command runned command
  */
 void getLineFromCommand ( char** rstr, char* command ) {
-	FILE *fp;
+	FILE *process;
   char retstr[1035];
 
 	if ( checkForValidCommand ( command ) ) {
@@ -114,16 +112,16 @@ void getLineFromCommand ( char** rstr, char* command ) {
 	}
 
 	// Open the command for reading
-  fp = popen ( command, "r" );
-  if ( fp == NULL ) {
+	process = popen ( command, "r" );
+	if ( process == NULL ) {
 	  printf ( "Failed to run command\n" );
 	  exit ( errno );
   }
 
   // Read the output
-  fgets ( retstr, sizeof ( retstr ), fp );
+	fgets ( retstr, sizeof ( retstr ), process );
 
-	pclose(fp);
+	pclose ( process );
 
 	(*rstr) = malloc ( strlen ( retstr ) );
 	memcpy ( (*rstr), retstr, strlen (retstr) );
@@ -139,7 +137,7 @@ void getLineFromCommand ( char** rstr, char* command ) {
  * \param command runned command
  */
 void getLinesFromCommand ( char** rstr, char* command ) {
-  FILE *fp;
+	FILE *process;
   char retstr[1035];
 	char strbuff[6000];
 
@@ -149,21 +147,21 @@ void getLinesFromCommand ( char** rstr, char* command ) {
 	}
 
   // Open the command for reading
-  fp = popen ( command, "r" );
-  if ( fp == NULL ) {
-    printf ("Failed to run command\n" );
+	process = popen ( command, "r" );
+	if ( process == NULL ) {
+    printf ( "Failed to run command\n" );
     exit ( 1 );
   }
 
 	strcpy ( strbuff, "" );
 
   // Read the output a line at a time - append it to strbuff
-  while ( fgets ( retstr, sizeof ( retstr ), fp ) != NULL ) {
+	while ( fgets ( retstr, sizeof ( retstr ), process ) != NULL ) {
 	  strcat( strbuff, retstr );
   }
 
   // close
-  pclose(fp);
+	pclose ( process );
 
 	(*rstr) = malloc ( strlen ( strbuff ) );
 	memcpy ( (*rstr), strbuff, strlen (strbuff) );
@@ -203,7 +201,7 @@ void getCpuValues ( ) {
  */
 void getGpuValues ( ) {
 	char* commandRet;
-	char* myPtr;
+	char* iterator;
 	int counter;
 
   getLineFromCommand (
@@ -211,24 +209,24 @@ void getGpuValues ( ) {
 		"nvidia-smi | head -n10 | tail -n1");
 
 	// divide string
-	myPtr = strtok( commandRet, " ");
+	iterator = strtok( commandRet, " ");
 	counter = 0;
 
-	while ( myPtr != NULL ) {
+	while ( iterator != NULL ) {
 		switch ( counter ) {
 			case 12: // utilization
-				memcpy ( (void*) buff.nvidiaLines[1], myPtr, strlen ( myPtr ) - 1 );
+				memcpy ( (void*) buff.nvidiaLines[1], iterator, strlen ( iterator ) - 1 );
 				break;
 			case 2: // get temp
-				memcpy ( (void*) buff.nvidiaLines[0], myPtr, strlen ( myPtr ) - 1 );
+				memcpy ( (void*) buff.nvidiaLines[0], iterator, strlen ( iterator ) - 1 );
 				break;
 			case 4: // get watt
-				memcpy ( (void*) buff.nvidiaLines[2], myPtr, strlen ( myPtr ) - 1 );
+				memcpy ( (void*) buff.nvidiaLines[2], iterator, strlen ( iterator ) - 1 );
 				break;
 		}
 		// next field
-  	myPtr = strtok(NULL, " ");
-		counter++;
+		iterator = strtok(NULL, " ");
+		++counter;
 	}
 
 	free ( commandRet );
@@ -241,7 +239,7 @@ void getGpuValues ( ) {
  */
 void getLiquidctlValues ( ) {
 	char* commandRet;
-	char* myPtr;
+	char* iterator;
 	int counter;
 
 	getLinesFromCommand (
@@ -249,24 +247,24 @@ void getLiquidctlValues ( ) {
 		"liquidctl status | tail -n6 | head -n5");
 
 	// divide string
-	myPtr = strtok( commandRet, " ");
+	iterator = strtok( commandRet, " ");
 	counter = 0;
 
-	while ( myPtr != NULL ) {
+	while ( iterator != NULL ) {
 		switch ( counter ) {
 			case 11: // utilization
-				memcpy ( (void*) buff.liquidLines[1], myPtr, strlen ( myPtr ) + 1 );
+				memcpy ( (void*) buff.liquidLines[1], iterator, strlen ( iterator ) + 1 );
 				break;
 			case 3: // get temp
-				memcpy ( (void*) buff.liquidLines[2], myPtr, strlen ( myPtr ) + 1 );
+				memcpy ( (void*) buff.liquidLines[2], iterator, strlen ( iterator ) + 1 );
 				break;
 			case 19: // get temp
-				memcpy ( (void*) buff.liquidLines[0], myPtr, strlen ( myPtr ) + 1 );
+				memcpy ( (void*) buff.liquidLines[0], iterator, strlen ( iterator ) + 1 );
 				break;
 		}
 		// next field
-  	myPtr = strtok(NULL, " ");
-		counter++;
+		iterator = strtok(NULL, " ");
+		++counter;
 	}
 
 	free ( commandRet );
@@ -279,7 +277,7 @@ void getLiquidctlValues ( ) {
  */
 void getSystemValues ( ) {
 	char* commandRet;
-	char* myPtr;
+	char* iterator;
 	int counter;
 
 	getLinesFromCommand (
@@ -287,24 +285,24 @@ void getSystemValues ( ) {
 		"sensors | grep \"System Fan\"");
 
 	// divide string
-	myPtr = strtok( commandRet, " ");
+	iterator = strtok( commandRet, " ");
 	counter = 0;
 
-	while ( myPtr != NULL ) {
+	while ( iterator != NULL ) {
 		switch ( counter ) {
 			case 15: // utilization
-				memcpy ( (void*) buff.systemLines[0], myPtr, strlen ( myPtr ) + 1 );
+				memcpy ( (void*) buff.systemLines[0], iterator, strlen ( iterator ) + 1 );
 				break;
 			case 27: // utilization
-				memcpy ( (void*) buff.systemLines[1], myPtr, strlen ( myPtr ) + 1 );
+				memcpy ( (void*) buff.systemLines[1], iterator, strlen ( iterator ) + 1 );
 				break;
 			case 39: // utilization
-				memcpy ( (void*) buff.systemLines[2], myPtr, strlen ( myPtr ) + 1 );
+				memcpy ( (void*) buff.systemLines[2], iterator, strlen ( iterator ) + 1 );
 				break;
 		}
 		// next field
-		myPtr = strtok(NULL, " ");
-		counter++;
+		iterator = strtok(NULL, " ");
+		++counter;
 	}
 
 	free ( commandRet );
@@ -315,7 +313,7 @@ void getSystemValues ( ) {
 /**
  * \brief Helperfunction to fetch all values. Only for better reading.
  */
-void getValues ( ) {
+inline void getValues ( ) {
 	getCpuValues ( );
 	getGpuValues ( );
 	getLiquidctlValues ( );
@@ -328,6 +326,10 @@ void getValues ( ) {
  * \brief Helper function for opening and settings for serial port comunication
  */
 void openSerial ( ) {
+	/// struct for serial port settings
+	struct termios tty;
+
+
 	serialPort = open ( devicePath, O_RDWR );
 
 	if ( serialPort < 0 ) {
@@ -335,12 +337,12 @@ void openSerial ( ) {
 			printf ( "No such device: %s\n", devicePath );
 		else
 			printf ( "Error %i from open: %s\n", errno, strerror ( errno ) );
-		exit( errno );
+		exit ( errno );
 	}
 
 	if ( tcgetattr ( serialPort, &tty ) != 0 ) {
 		printf ( "Error %i from tcgetattr: %s\n", errno, strerror ( errno ) );
-		exit( errno );
+		exit ( errno );
 	}
 
 	// some config changes
@@ -350,7 +352,7 @@ void openSerial ( ) {
 	// apply tty settings, also checking for error
 	if ( tcsetattr ( serialPort, TCSANOW, &tty ) != 0 ) {
 		printf ( "Error %i from tcsetattr: %s\n", errno, strerror ( errno ) );
-		exit( errno );
+		exit ( errno );
 	}
 
 	isConnected = 1;
@@ -501,19 +503,19 @@ void debOutputBuffer ( ) {
 	printf("GPU Temp: %s\n    utilization: %s\n    Watt: %s\n",
 		buff.nvidiaLines[0],
 		buff.nvidiaLines[1],
-		buff.nvidiaLines[2]);
+		buff.nvidiaLines[2] );
 	printf("CPU Temp: %s\n    takt: %s\n    utilization: %s\n",
 	  buff.cpuLines[0],
 		buff.cpuLines[1],
-		buff.cpuLines[2]);
+		buff.cpuLines[2] );
   printf("Liq fanspeed: %s\n    pumpspeed: %s\n    watertemp: %s\n",
 		buff.liquidLines[0],
 	  buff.liquidLines[1],
-		buff.liquidLines[2]);
+		buff.liquidLines[2] );
 	printf("SYS fan1: %s\n    fan2: %s\n    fan3: %s\n",
 		buff.systemLines[0],
 		buff.systemLines[1],
-		buff.systemLines[2]);
+		buff.systemLines[2] );
 }
 #endif
 
@@ -545,13 +547,15 @@ void init_monitor ( ) {
  * Get automatically called everytime a exit() is used.
  */
 void close_monitor ( ) {
-	register unsigned short int counter = 0;
+	register unsigned short int counter;
+
+	counter = 0;
 
 	if ( serialPort != 0 )
 		closeSerial ( );
 
 	// free all allocated buffer
-	for (counter = 0; counter < 3; counter++ ) {
+	for ( ; counter < 3; counter++ ) {
 		free ( buff.cpuLines[ counter ] );
 		free ( buff.liquidLines[ counter ] );
 		free ( buff.nvidiaLines[ counter ] );
@@ -571,10 +575,12 @@ void close_monitor ( ) {
 void loop_monitor ( ) {
 	while ( 1 ) {
 		getValues ( );
+
 #ifdef DEBUG
 	if ( isDebug )
 		debOutputBuffer ( );
 #endif
+
 		writeSerial ( );
 		sleep ( 1 );
 	}
@@ -585,9 +591,9 @@ void loop_monitor ( ) {
 /**
  * \brief Overrides signal handling for strg+c.
  */
-void sig_handler(int signo) {
-  if (signo == SIGINT) {
-    printf("received SIGINT, closing watchdog\n");
+void sig_handler ( int signo ) {
+  if ( signo == SIGINT ) {
+    printf ( "received SIGINT, closing watchdog\n" );
 		exit ( EXIT_SUCCESS );
 	}
 }
@@ -611,11 +617,13 @@ int main (int argc, char** argv) {
 
 	// exit handler for cleanup
 	atexit ( close_monitor );
-	if (signal(SIGINT, sig_handler) == SIG_ERR)
-	printf("\ncan't catch SIGINT\n");
+	if ( signal ( SIGINT, sig_handler ) == SIG_ERR ) {
+		printf ( "\ncan't catch SIGINT\n" );
+		exit ( EXIT_FAILURE );
+	}
 
 	// opt management
-	while (1) {
+	while ( 1 ) {
 		opt = getopt_long ( argc, argv, "hvDp:", longOptions, &optionIndex );
 
 		if ( opt == -1 ) break;
