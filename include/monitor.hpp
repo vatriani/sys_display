@@ -32,7 +32,6 @@ private:
   Display* display;
   SerialPort* serial;
   displayData* data;
-
   bool checkErrors ( );
 
 public:

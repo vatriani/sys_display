@@ -35,17 +35,14 @@ class Display {
 private:
   U8G2_SH1106_128X64_NONAME_1_SW_I2C* u8g2;
   unsigned char actualPage;
-
   displayStrings displayString;
   displayData* data;
-
   const char* title[4] = {
     "CPU",
     "LIQUID",
     "GPU",
     "SYS"
   };
-
   const unsigned int line[3] = { 31, 46, 61 };
 
   void drawHeader ( );
