@@ -14,6 +14,22 @@ Monitor::Monitor ( ) {
   serial = new SerialPort ( );
   display = new Display ( );
   data = new displayData;
+
+  display->setDisplayData ( data );
+
+  // testdata
+  data->cpu_u = "2";
+  data->cpu_c = "5120";
+  data->cpu_t = "41";
+  data->gpu_t = "61";
+  data->gpu_u = "2";
+  data->gpu_p = "14";
+  data->fan1_s = "761";
+  data->fan2_s = "1028";
+  data->fan3_s = "759";
+  data->liquid_f = "620";
+  data->liquid_p = "1800";
+  data->liquid_t = "31,2";
 }
 
 
