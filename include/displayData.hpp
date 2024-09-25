@@ -21,7 +21,7 @@
 
 
 /**
- * Data struct used to hold values for write to display.
+ * \brief Data struct used to hold values for write to display.
  */
 struct displayData {
   /// GPU temperature in degree celsius
@@ -37,17 +37,30 @@ struct displayData {
   /// CPU utilization in percent
   std::string cpu_u;
   /// Fan 1 fanspeed in RPM
-  std::string fan1;
+  std::string fan1_s;
   /// Fan 2 fanspeed in RPM
-  std::string fan2;
+  std::string fan2_s;
   /// Fan 3 fanspeed in RPM
-  std::string fan3;
+  std::string fan3_s;
   /// Radiator fanspeed in RPM
   std::string liquid_f;
   /// Pump speed in RPM
   std::string liquid_p;
   /// Water temperature in degree celsius
   std::string liquid_t;
+};
+
+
+
+/**
+ * \brief Language definition
+ */
+struct displayStrings {
+  const std::string t = "temp  $ °C";
+  const std::string u = "utili $ %";
+  const std::string p = "power $ watt";
+  const std::string c = "clock $ MHz";
+  const std::string s = "speed $ RPM";
 };
 
 #endif

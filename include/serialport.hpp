@@ -19,13 +19,25 @@
 #ifndef SERIALPORT_HPP
 #define SERIALPORT_HPP
 
+#include <string>
 
+#include "s_buffer.h"
 
 class SerialPort {
 private:
+  buffer received;
+  std::string err;
+
 public:
-    SerialPort ();
-    ~SerialPort ();
+  bool newData;
+
+  SerialPort ( );
+  ~SerialPort ( );
+
+  void loop ( ) ;
+
+  std::string recv ( );
+  std::string getErr ( );
 };
 
 #endif

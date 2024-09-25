@@ -1,4 +1,5 @@
 #include "display.hpp"
+#include "displayData.hpp"
 
 
 
@@ -22,7 +23,34 @@ void Display::drawHeader ( ) {
 
 
 void Display::drawContend ( ) {
-  //u8g2
+  std::string lineText[3];
+
+  switch (actualPage) {
+  case 0: // CPU
+    lineText[0].append ( displayString.t );
+    lineText[1].append ( displayString.c );
+    lineText[2].append ( displayString.u );
+    break;;
+  case 1: // LIQUID
+    lineText[0].append ( displayString.s );
+    lineText[1].append ( displayString.s );
+    lineText[2].append ( displayString.t );
+    break;;
+  case 2: // GPU
+    lineText[0].append ( displayString.t );
+    lineText[1].append ( displayString.u );
+    lineText[2].append ( displayString.p );
+    break;;
+  case 3: // SYS
+    lineText[0].append ( displayString.s );
+    lineText[1].append ( displayString.s );
+    lineText[2].append ( displayString.s );
+    break;;
+  }
+  u8g2->setFont ( u8g_font_profont15r );
+
+  for (unsigned int counter = 0; counter < 3; counter++ )
+    u8g2->drawStr ( 0, line[counter], lineText[counter].c_str ( ) );
 }
 
 
@@ -41,4 +69,24 @@ void Display::draw ( ) {
 void Display::next ( ) {
   if (actualPage == 3) actualPage = 0;
   else actualPage++;
+}
+
+
+
+void Display::drawErr ( std::string err ) {
+  drawHeader ( );
+  u8g2->setFont ( u8g_font_profont15r );
+  u8g2->drawStr ( 0, line[0], err.c_str( ) );
+}
+
+
+
+void Display::setDisplayData ( displayData* dataN ) {
+  this->data = dataN;
+}
+
+
+void Display::sReplace ( std::string* input, std::string replace ) {
+  std::size_t pos = input->find ( "$" );
+  input->replace ( pos, 1, replace );
 }

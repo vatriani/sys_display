@@ -19,6 +19,8 @@
 #ifndef MONITOR_HPP
 #define MONITOR_HPP
 
+#include <string>
+
 #include "display.hpp"
 #include "serialport.hpp"
 #include "displayData.hpp"
@@ -27,17 +29,18 @@
 
 class Monitor {
 private:
-    Display* display;
-    SerialPort* serial;
-    displayData* data;
+  Display* display;
+  SerialPort* serial;
+  displayData* data;
 
+  bool checkErrors ( );
 
 public:
-    Monitor ( );
-    ~Monitor ( );
+  Monitor ( );
+  ~Monitor ( );
 
-    void mLoop ();
-    void parseSerial ( char* buff  );
+  void mainLoop ( );
+  void parseSerial ( std::string );
 };
 
 #endif

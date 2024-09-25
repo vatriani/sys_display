@@ -29,5 +29,5 @@ void setup ( ) {
 
 /// Arduino loop function
 void loop ( ) {
-  mon->mLoop();
+  mon->mainLoop();
 }

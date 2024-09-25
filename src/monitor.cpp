@@ -1,6 +1,7 @@
 #include "monitor.hpp"
 
 #include <Arduino.h>
+#include <string>
 
 
 
@@ -8,9 +9,11 @@
  * Definition of setup() in Arduino
  */
 Monitor::Monitor ( ) {
-    pinMode ( LED_BUILTIN, OUTPUT );
-    display = new Display ( );
-    data = new displayData;
+  pinMode ( LED_BUILTIN, OUTPUT );
+
+  serial = new SerialPort ( );
+  display = new Display ( );
+  data = new displayData;
 }
 
 
@@ -21,7 +24,7 @@ Monitor::~Monitor ( ) {
 
 
 
-void Monitor::parseSerial ( char* buff ) {
+void Monitor::parseSerial ( std::string ) {
 
 }
 
@@ -30,13 +33,26 @@ void Monitor::parseSerial ( char* buff ) {
 /**
  * Arduino loop ()
  */
-void Monitor::mLoop ( ) {
-    while (1) {
-        display->draw();
-        display->next();
-        digitalWrite ( LED_BUILTIN, HIGH );
-        delay ( 1000 );
-        digitalWrite ( LED_BUILTIN, LOW );
-        delay ( 1000 );
+void Monitor::mainLoop ( ) {
+  while ( 1 ) {
+    if ( checkErrors ( ) == true ) {
+      display->drawErr ( serial->getErr ( ).c_str ( ) );
     }
+    else {
+      serial->loop ( );
+
+      display->draw ( );
+      display->next ( );
+    }
+    digitalWrite ( LED_BUILTIN, HIGH );
+    delay ( 1000 );
+    digitalWrite ( LED_BUILTIN, LOW );
+    delay ( 1000 );
+  }
+}
+
+
+bool Monitor::checkErrors ( ) {
+  if ( serial->getErr ( ).empty ( ) == true ) return false;
+  else return true;
 }

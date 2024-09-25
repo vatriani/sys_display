@@ -23,6 +23,8 @@
 
 #include "defines.h"
 #include "string.h"
+#include "displayData.hpp"
+#include <string>
 
 
 
@@ -34,6 +36,9 @@ private:
   U8G2_SH1106_128X64_NONAME_1_SW_I2C* u8g2;
   unsigned char actualPage;
 
+  displayStrings displayString;
+  displayData* data;
+
   const char* title[4] = {
     "CPU",
     "LIQUID",
@@ -41,8 +46,11 @@ private:
     "SYS"
   };
 
+  const unsigned int line[3] = { 31, 46, 61 };
+
   void drawHeader ( );
   void drawContend ( );
+  void sReplace ( std::string* input, std::string replace );
 
 public:
   Display ( );
@@ -50,6 +58,9 @@ public:
 
   void draw ( );
   void next ( );
+  void drawErr ( std::string err );
+
+  void setDisplayData ( displayData* dataN );
 };
 
 #endif
