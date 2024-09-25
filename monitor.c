@@ -86,7 +86,8 @@ unsigned int checkForValidCommand ( char* command ) {
 	}
 
 #ifdef DEBUG
-	printf("counted commands %i, counted valid commands %i\n", countCommands, ret );
+	if ( isDebug )
+		printf("counted commands %i, counted valid commands %i\n", countCommands, ret );
 #endif
 
 	if ( ret == countCommands ) return 0;
