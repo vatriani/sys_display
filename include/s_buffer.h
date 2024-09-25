@@ -33,10 +33,10 @@ const char8_t protoAcc = 0x01;
 /// Error sign
 const char8_t protoError = 0x02;
 
-
 /// setting string lengh to 4 + ZERO by string definition
 const unsigned int protoStrLength = 5;
-
+/// max message length
+const int protoMessLength = 12 * protoStrLength + 2;
 
 
 /**
