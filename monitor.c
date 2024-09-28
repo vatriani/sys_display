@@ -23,6 +23,7 @@
 #include <bits/getopt_ext.h>
 #include <signal.h>
 #include <libintl.h>
+#include <time.h>
 
 #include "config.h"
 #include "include/s_buffer.h"
@@ -54,8 +55,30 @@ const char* execProgramms[9] = {
 	"tail",
 	"head"
 };
+static unsigned long uTimeStart;
+static unsigned long timeStart;
 
+float cpuavg(void) {
+	unsigned long long user, nice, system, idle;
+	unsigned long timeEnd, uTimeEnd;
+	double ret = 0.0;
 
+	FILE *data;
+	data = fopen ( "/proc/stat", "r" );
+	fscanf ( data, "%*s %llu %llu %llu %llu", &user, &nice, &system, &idle );
+	fclose ( data );
+
+	uTimeEnd = user + nice + system;
+	timeEnd = user + nice + system + idle;
+
+	if ( timeStart )
+		ret = ( (double)( uTimeEnd - uTimeStart ) ) /
+		( (double)( timeEnd - timeStart ) )*100.0;
+
+	uTimeStart = uTimeEnd;
+	timeStart = timeEnd;
+	return ret;
+}
 
 /**
  * \brief Checks if valid commands is set. Block unwanted commands.
@@ -81,7 +104,8 @@ unsigned int checkForValidCommand ( char* command ) {
 
 		// iterate over all valid commands
 		for ( ; validCommandCounter < 9; validCommandCounter++ ) {
-			if ( strncmp ( iterator, execProgramms[validCommandCounter], strlen (execProgramms[validCommandCounter]) ) == 0 )
+			if ( strncmp ( iterator, execProgramms[validCommandCounter],
+				   strlen (execProgramms[validCommandCounter]) ) == 0 )
 				ret += 1;
 		}
 
@@ -186,15 +210,12 @@ void getCpuValues ( ) {
 
 	getLineFromCommand (
 		&commandRet,
-		"sensors | grep Tctl | cut -d\"+\" -f2" );
-	memcpy ( (void*) buff.cpuLines[0], commandRet, strlen ( commandRet ) -6  );
+		"sensors -u | grep Tctl -A1 | tail -n1 | cut -d\" \" -f4 | cut -b1-4");
+	memcpy ( (void*) buff.cpuLines[0], commandRet, 4 );
 
-	getLineFromCommand (
-		&commandRet,
-		"top -n1 | head -n3 | tail -n1 | cut -d\" \" -f11" );
-	float tmp = atof ( commandRet );
-	gcvt( 100.0 - tmp ,4 , (char*) buff.cpuLines[2]);
-
+	snprintf ( (char*)buff.cpuLines[2], protoStrLength - 1, "%'.1f", cpuavg ( ) );
+	for ( char counter = 0; counter < protoStrLength; counter++ )
+		if(buff.cpuLines[2][counter] == ',' ) buff.cpuLines[2][counter] = '.';
 	free ( commandRet );
 }
 
@@ -618,6 +639,7 @@ int main (int argc, char** argv) {
 	serialPort = 0;
 	optionIndex = 0;
 	isDevicePathChanged = 0;
+	timeStart = 0;
 
 	// exit handler for cleanup
 	atexit ( close_monitor );

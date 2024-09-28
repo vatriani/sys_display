@@ -25,7 +25,7 @@
 /// Protocol version
 const char8_t protoVersion = 0x01;
 /// seperator between values
-const char8_t protoSeperator = ',';
+const char8_t protoSeperator = ';';
 /// definition of last byte in communication
 const char8_t protoLastByte = 0x00;
 /// Acknolege sign
