@@ -1,7 +1,10 @@
 #include "monitor.hpp"
 
 #include <Arduino.h>
+#include <EEPROM.h>
 #include <string>
+
+#include "s_buffer.h"
 
 
 
@@ -11,9 +14,12 @@
 Monitor::Monitor ( ) {
   pinMode ( LED_BUILTIN, OUTPUT );
 
-  serial = new SerialPort ( );
   display = new Display ( );
   data = new displayData;
+
+  serial = new SerialPort ( );
+
+  EEPROM.begin ( protoMessLength );
 
   display->setDisplayData ( data );
 
@@ -52,7 +58,7 @@ void Monitor::parseSerial ( std::string ) {
 void Monitor::mainLoop ( ) {
   while ( 1 ) {
     if ( checkErrors ( ) == true ) {
-      display->drawErr ( serial->getErr ( ).c_str ( ) );
+      display->drawErr ( serial->getErr ( ) );
     }
     else {
       serial->loop ( );
