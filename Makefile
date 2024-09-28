@@ -10,7 +10,7 @@ else
 FLAGS += -O2
 endif
 
-all: $(TARGET) pio
+all: $(TARGET) po/$(TARGET).pot pio
 
 $(TARGET): $(SRCS)
 	gcc $(FLAGS) $(SRCS) -o $(TARGET)
@@ -36,5 +36,13 @@ install: $(TARGET)
 	chmod go+rx /usr/bin/$(TARGET)
 
 translation:
-	xgettext --keyword=_ --language=C --add-comments -o po/monitor.pot monitor.c
-	#msginit --input=po/monitor.pot --locale=de --output=po/de/monitor.po
+	xgettext --keyword=_ --language=C --add-comments -o po/$(TARGET).pot $(TARGET).c
+
+po/de/$(TERGET).mo: po/de/$(TARGET).po
+	msgfmt --output-file=$@ $<
+
+po/de/$(TARGET).po: po/$(TARGET).pot
+	msgmerge --update $@ $<
+
+po/$(TARGET).pot: $(TARGET).c
+	xgettext -k_ -j -lC -c -o po/$(TARGET).pot $(TARGET).c
