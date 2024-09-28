@@ -34,3 +34,7 @@ clean:
 install: $(TARGET)
 	cp $(TARGET) /usr/bin/$(TARGET)
 	chmod go+rx /usr/bin/$(TARGET)
+
+translation:
+	xgettext --keyword=_ --language=C --add-comments -o po/monitor.pot monitor.c
+	#msginit --input=po/monitor.pot --locale=de --output=po/de/monitor.po

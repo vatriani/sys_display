@@ -1,0 +1,115 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-09-28 11:27+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: monitor.c:93
+#, c-format
+msgid "counted commands %i, counted valid commands %i\n"
+msgstr ""
+
+#: monitor.c:114 monitor.c:149
+#, c-format
+msgid "No valid command or isn't listed in whitelist.\n"
+msgstr ""
+
+#: monitor.c:121 monitor.c:156
+#, c-format
+msgid "Failed to run command\n"
+msgstr ""
+
+#: monitor.c:341
+#, c-format
+msgid "No such device: %s\n"
+msgstr ""
+
+#: monitor.c:343
+#, c-format
+msgid "Error %i from open: %s\n"
+msgstr ""
+
+#: monitor.c:348
+#, c-format
+msgid "Error %i from tcgetattr: %s\n"
+msgstr ""
+
+#: monitor.c:358
+#, c-format
+msgid "Error %i from tcsetattr: %s\n"
+msgstr ""
+
+#: monitor.c:465
+#, c-format
+msgid ""
+"monitor for comunication with arduino sysmon\n"
+"use: monitor\n"
+"\n"
+msgstr ""
+
+#: monitor.c:474
+#, c-format
+msgid ""
+"monitor 0.1\n"
+"Copyright (C) 2024 Niels Neumann  <vatriani.nn@googlemail.com\n"
+"License GPLv3+: GNU GPL Version 3 or later <http://gnu.org/licenses/gpl."
+"html>.\n"
+"This is free software: you are free to change and redistribute it.\n"
+"There is NO WARRANTY, to the extent permitted by law.\n"
+"\n"
+msgstr ""
+
+#: monitor.c:507
+#, c-format
+msgid ""
+"GPU Temp: %s\n"
+"    utilization: %s\n"
+"    Watt: %s\n"
+msgstr ""
+
+#: monitor.c:511
+#, c-format
+msgid ""
+"CPU Temp: %s\n"
+"    takt: %s\n"
+"    utilization: %s\n"
+msgstr ""
+
+#: monitor.c:515
+#, c-format
+msgid ""
+"Liq fanspeed: %s\n"
+"    pumpspeed: %s\n"
+"    watertemp: %s\n"
+msgstr ""
+
+#: monitor.c:519
+#, c-format
+msgid ""
+"SYS fan1: %s\n"
+"    fan2: %s\n"
+"    fan3: %s\n"
+msgstr ""
+
+#: monitor.c:600
+#, c-format
+msgid "received SIGINT, closing watchdog\n"
+msgstr ""
+
+#: monitor.c:625
+#, c-format
+msgid "can't catch SIGINT\n"
+msgstr ""

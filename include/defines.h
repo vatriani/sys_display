@@ -30,4 +30,6 @@
 #define LOW 0
 #endif
 
+#define _(char) gettext(char)
+
 #endif

@@ -22,8 +22,11 @@
 #include <unistd.h>
 #include <bits/getopt_ext.h>
 #include <signal.h>
+#include <libintl.h>
 
+#include "config.h"
 #include "include/s_buffer.h"
+#include "include/defines.h"
 
 
 
@@ -87,7 +90,7 @@ unsigned int checkForValidCommand ( char* command ) {
 
 #ifdef DEBUG
 	if ( isDebug )
-		printf("counted commands %i, counted valid commands %i\n", countCommands, ret );
+		printf ( _( "counted commands %i, counted valid commands %i\n" ), countCommands, ret );
 #endif
 
 	if ( ret == countCommands ) return 0;
@@ -108,14 +111,14 @@ void getLineFromCommand ( char** rstr, char* command ) {
   char retstr[1035];
 
 	if ( checkForValidCommand ( command ) ) {
-		printf ( "No valid command or isn't listed in whitelist.\n" );
+		printf ( _("No valid command or isn't listed in whitelist.\n" ) );
 		exit ( EXIT_FAILURE );
 	}
 
 	// Open the command for reading
 	process = popen ( command, "r" );
 	if ( process == NULL ) {
-	  printf ( "Failed to run command\n" );
+		printf ( _( "Failed to run command\n" ) );
 	  exit ( errno );
   }
 
@@ -143,14 +146,14 @@ void getLinesFromCommand ( char** rstr, char* command ) {
 	char strbuff[6000];
 
 	if ( checkForValidCommand ( command ) ) {
-		printf ( "No valid command or isn't listed in whitelist.\n" );
+		printf ( _( "No valid command or isn't listed in whitelist.\n" ) );
 		exit ( EXIT_FAILURE );
 	}
 
   // Open the command for reading
 	process = popen ( command, "r" );
 	if ( process == NULL ) {
-    printf ( "Failed to run command\n" );
+		printf ( _( "Failed to run command\n" ) );
     exit ( 1 );
   }
 
@@ -335,14 +338,14 @@ void openSerial ( ) {
 
 	if ( serialPort < 0 ) {
 		if ( errno == 2 )
-			printf ( "No such device: %s\n", devicePath );
+			printf ( _( "No such device: %s\n" ), devicePath );
 		else
-			printf ( "Error %i from open: %s\n", errno, strerror ( errno ) );
+			printf ( _( "Error %i from open: %s\n" ), errno, strerror ( errno ) );
 		exit ( errno );
 	}
 
 	if ( tcgetattr ( serialPort, &tty ) != 0 ) {
-		printf ( "Error %i from tcgetattr: %s\n", errno, strerror ( errno ) );
+		printf ( _( "Error %i from tcgetattr: %s\n" ), errno, strerror ( errno ) );
 		exit ( errno );
 	}
 
@@ -352,7 +355,7 @@ void openSerial ( ) {
 
 	// apply tty settings, also checking for error
 	if ( tcsetattr ( serialPort, TCSANOW, &tty ) != 0 ) {
-		printf ( "Error %i from tcsetattr: %s\n", errno, strerror ( errno ) );
+		printf ( _( "Error %i from tcsetattr: %s\n" ), errno, strerror ( errno ) );
 		exit ( errno );
 	}
 
@@ -458,8 +461,8 @@ void writeSerial ( ) {
 /**
  * \brief Output monitor -h for help message
  */
-inline void showHelp ( ) {
-	printf ( "monitor for comunication with arduino sysmon\nuse: monitor\n\n" );
+void showHelp ( ) {
+	printf ( _( "monitor for comunication with arduino sysmon\nuse: monitor\n\n" ) );
 }
 
 
@@ -467,11 +470,11 @@ inline void showHelp ( ) {
 /**
  * \brief Output monitor -v for version message
  */
-inline void showVersion ( ) {
-	printf ( "monitor 0.1\nCopyright (C) 2024 Niels Neumann  <vatriani.nn@googlemail.com\n\
+void showVersion ( ) {
+	printf ( _( "monitor 0.1\nCopyright (C) 2024 Niels Neumann  <vatriani.nn@googlemail.com\n\
 License GPLv3+: GNU GPL Version 3 or later <http://gnu.org/licenses/gpl.html>.\
 \nThis is free software: you are free to change and redistribute it.\
-\nThere is NO WARRANTY, to the extent permitted by law.\n\n" );
+\nThere is NO WARRANTY, to the extent permitted by law.\n\n" ) );
 }
 
 
@@ -501,19 +504,19 @@ inline void debFillBufferTestData ( ) {
  * \brief DEBUG outputs buffer struct
  */
 void debOutputBuffer ( ) {
-	printf("GPU Temp: %s\n    utilization: %s\n    Watt: %s\n",
+	printf ( _( "GPU Temp: %s\n    utilization: %s\n    Watt: %s\n" ),
 		buff.nvidiaLines[0],
 		buff.nvidiaLines[1],
 		buff.nvidiaLines[2] );
-	printf("CPU Temp: %s\n    takt: %s\n    utilization: %s\n",
+	printf ( _( "CPU Temp: %s\n    takt: %s\n    utilization: %s\n" ),
 	  buff.cpuLines[0],
 		buff.cpuLines[1],
 		buff.cpuLines[2] );
-  printf("Liq fanspeed: %s\n    pumpspeed: %s\n    watertemp: %s\n",
+	printf ( _( "Liq fanspeed: %s\n    pumpspeed: %s\n    watertemp: %s\n" ),
 		buff.liquidLines[0],
 	  buff.liquidLines[1],
 		buff.liquidLines[2] );
-	printf("SYS fan1: %s\n    fan2: %s\n    fan3: %s\n",
+	printf ( _( "SYS fan1: %s\n    fan2: %s\n    fan3: %s\n" ),
 		buff.systemLines[0],
 		buff.systemLines[1],
 		buff.systemLines[2] );
@@ -594,7 +597,7 @@ void loop_monitor ( ) {
  */
 void sig_handler ( int signo ) {
   if ( signo == SIGINT ) {
-    printf ( "received SIGINT, closing watchdog\n" );
+		printf ( _( "received SIGINT, closing watchdog\n" ) );
 		exit ( EXIT_SUCCESS );
 	}
 }
@@ -619,9 +622,13 @@ int main (int argc, char** argv) {
 	// exit handler for cleanup
 	atexit ( close_monitor );
 	if ( signal ( SIGINT, sig_handler ) == SIG_ERR ) {
-		printf ( "\ncan't catch SIGINT\n" );
+		printf ( _( "can't catch SIGINT\n" ) );
 		exit ( EXIT_FAILURE );
 	}
+
+	setlocale (LC_ALL, "");
+  bindtextdomain (PACKAGE, LOCALEDIR);
+  textdomain (PACKAGE);
 
 	// opt management
 	while ( 1 ) {
