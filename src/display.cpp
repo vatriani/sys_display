@@ -15,9 +15,9 @@ Display::Display ( ) {
 void Display::drawHeader ( ) {
   u8g2->drawHLine ( 0, 16, 160 );
   u8g2->setFont ( u8g_font_profont17r );
-  u8g2->drawStr ( 0, 15, "sensors" );
+  u8g2->drawStr ( 0, 15, (const char*) FPSTR ( "sensors" ) );
   u8g2->setFont ( u8g_font_profont15r );
-  u8g2->drawStr ( 80, 14, title[actualPage] );
+  u8g2->drawStr ( 80, 14, (const char*) FPSTR ( title[actualPage] ) );
 }
 
 
