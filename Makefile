@@ -21,6 +21,9 @@ pio:
 upload:
 	pio run --target upload
 
+test:
+	pio test
+
 run:
 	./$(TARGET)
 
