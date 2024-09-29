@@ -5,11 +5,6 @@
  *  \version   0.1
  *  \date      2024
  *  \copyright GNU Public License v3
- *  \pre       First initialize the system.
- *  \bug
- *  \warning		Early development
- *  \deprecated
- *  \todo
  */
 
 

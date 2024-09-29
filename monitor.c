@@ -5,13 +5,7 @@
 	*  \version    0.1.17
   *  \date       2024
   *  \copyright  GNU Public License v3
-  *  \pre        First initialize the system.
-  *  \bug
-  *  \warning		 Early development
   */
-
-
-
 #include <stdlib.h>
 #include <stdio.h>
 #include <getopt.h>
@@ -25,9 +19,15 @@
 #include <libintl.h>
 #include <time.h>
 
-#include "config.h"
 #include "include/s_buffer.h"
 #include "include/defines.h"
+
+
+
+/// only for localisation purpose
+#define PACKAGE "monitor"
+/// only for localisation purpose
+#define LOCALEDIR "./po"
 
 
 
@@ -224,7 +224,7 @@ void getLinesFromCommand ( char** rstr, char* command )
 /**
  * \brief Reads and calculates CPU values.
  *
- * \todo-low get rid of exec command
+ * \todo-low	get rid of exec command
  * - cat /proc/cpuinfo | grep "cpu MHz" | head -n1 | cut -d" " -f3 | cut -d"." -f1
  * - sensors -u | grep Tctl -A1 | tail -n1 | cut -d" " -f4 | cut -b1-4
  */
@@ -253,7 +253,7 @@ void getCpuValues ( )
 /**
  * \brief Reads and calculates GPU values.
  *
- * \todo-low - get rid of exec command
+ * \todo-low	get rid of exec command
  * - nvidia-smi | head -n10 | tail -n1
  */
 void getGpuValues ( )
@@ -295,7 +295,7 @@ void getGpuValues ( )
 /**
  * \brief Reads and calculates liquid values.
  *
- * \todo-low - get rid of exec command
+ * \todo-low	get rid of exec command
  * - liquidctl status | tail -n6 | head -n5
  */
 void getLiquidctlValues ( )
@@ -337,7 +337,7 @@ void getLiquidctlValues ( )
 /**
  * \brief Reads and calculates system values.
  *
- * \todo-low - get rid of exec command
+ * \todo-low	get rid of exec command
  * - sensors | grep "System Fan"
  */
 void getSystemValues ( )
@@ -433,9 +433,8 @@ void openSerial ( )
  * \brief Generates char buffer whitch contains the parsed struct buffer and sending it
  * over serial to the device.
  *
- * \todo-medium
- *   - simplify string copying with secound iterator for struct buffer.
- *   - move string handling to parseToBuffer(char**) function.
+ * \todo-medium	simplify string copying with secound iterator for struct buffer.
+ * \todo-low 		move string handling to parseToBuffer(char**) function.
  */
 void writeSerial ( )
 {

@@ -1,23 +1,18 @@
- /**
-  *  \file      s_buffer.h
-  *  \brief     Defines the data struct for communication.
-  *  \author    Niels Neumann
-  *  \version   0.1
-  *  \date      2024
-  *  \copyright GNU Public License v3
-  *  \pre
-  *  \bug
-  *  \warning
-  *  \deprecated
-  *  \todo
-  */
+/**
+ *  \file      s_buffer.h
+ *  \brief     Defines the data struct for communication.
+ *  \author    Niels Neumann
+ *  \version   0.1
+ *  \date      2024
+ *  \copyright GNU Public License v3
+ */
 #ifndef S_BUFFER_H
 #define S_BUFFER_H
 
 
 
 #ifndef __CHAR8__TYPE__
-    /// definition for check if unsigned char is set 
+    /// definition for check if unsigned char is set
     #define __CHAR8__TYPE__
     /// definition for unsigned char
     #define char8_t unsigned char
