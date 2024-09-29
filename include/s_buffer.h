@@ -17,7 +17,9 @@
 
 
 #ifndef __CHAR8__TYPE__
+    /// definition for check if unsigned char is set 
     #define __CHAR8__TYPE__
+    /// definition for unsigned char
     #define char8_t unsigned char
 #endif
 

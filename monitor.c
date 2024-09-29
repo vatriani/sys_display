@@ -2,15 +2,15 @@
   *  \file       monitor.c
   *  \brief      Implements the watchdog for accuiring and sending data.
   *  \author     Niels Neumann
-	*  \version    0.3
+	*  \version    0.1.17
   *  \date       2024
   *  \copyright  GNU Public License v3
   *  \pre        First initialize the system.
   *  \bug
   *  \warning		 Early development
-	*  \deprecated
-	*  \todo			 CPU value for utilization
   */
+
+
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -55,10 +55,21 @@ const char* execProgramms[9] = {
 	"tail",
 	"head"
 };
+/// time difference
 static unsigned long uTimeStart;
+/// old timer value initialize at program start
 static unsigned long timeStart;
+/// wait time after getting new values and sending it over serial
+const short int waitSecounds = 2;
 
-float cpuavg(void) {
+
+/**
+ * \brief Calculates cpu utilization from /proc/stat.
+ *
+ * \return cpu utilization in timespan of last and this actualisation
+ */
+float cpuavg ( )
+{
 	unsigned long long user, nice, system, idle;
 	unsigned long timeEnd, uTimeEnd;
 	double ret = 0.0;
@@ -68,8 +79,8 @@ float cpuavg(void) {
 	fscanf ( data, "%*s %llu %llu %llu %llu", &user, &nice, &system, &idle );
 	fclose ( data );
 
-	uTimeEnd = user + nice + system;
 	timeEnd = user + nice + system + idle;
+	uTimeEnd = user + nice + system;
 
 	if ( timeStart )
 		ret = ( (double)( uTimeEnd - uTimeStart ) ) /
@@ -80,11 +91,18 @@ float cpuavg(void) {
 	return ret;
 }
 
+
+
 /**
  * \brief Checks if valid commands is set. Block unwanted commands.
+ *
+ * \param	command	program string exec by bash.
+ * \return 0 if no err. 1 or more, counted invalid program.
+ * \deprecated if all exec commands are replaced.
  */
-unsigned int checkForValidCommand ( char* command ) {
-	char testCommand[strlen ( command ) ];
+unsigned int checkForValidCommand ( char* command )
+{
+	char testCommand[ strlen ( command ) - 1 ];
 	char* iterator;
 	register unsigned int validCommandCounter;
 	unsigned int countCommands;
@@ -127,12 +145,16 @@ unsigned int checkForValidCommand ( char* command ) {
  * \brief Run a system command localy and the return is written in rstr.
  * Used for single line Output.
  *
- * \param rstr pointer to return string
- * \param command runned command
+ * \param	rstr		pointer to return string
+ * \param	command	runned command
+ *
+ * \deprecated if all exec commands are replaced
+ * \see getLinesFromCommand
  */
-void getLineFromCommand ( char** rstr, char* command ) {
-	FILE *process;
-  char retstr[1035];
+void getLineFromCommand ( char** rstr, char* command )
+{
+	FILE* process;
+	char retstr[1035];
 
 	if ( checkForValidCommand ( command ) ) {
 		printf ( _("No valid command or isn't listed in whitelist.\n" ) );
@@ -144,9 +166,9 @@ void getLineFromCommand ( char** rstr, char* command ) {
 	if ( process == NULL ) {
 		printf ( _( "Failed to run command\n" ) );
 	  exit ( errno );
-  }
+	}
 
-  // Read the output
+	// Read the output
 	fgets ( retstr, sizeof ( retstr ), process );
 
 	pclose ( process );
@@ -161,12 +183,16 @@ void getLineFromCommand ( char** rstr, char* command ) {
  * \brief Run a system command localy and the return is written in rstr.
  * Used for multiple line Output. Lines are divided by comma.
  *
- * \param rstr pointer to return string
- * \param command runned command
+ * \param	rstr		pointer to return string
+ * \param	command	runned command
+ *
+ * \deprecated if all exec commands are replaced
+ * \see getLineFromCommand
  */
-void getLinesFromCommand ( char** rstr, char* command ) {
-	FILE *process;
-  char retstr[1035];
+void getLinesFromCommand ( char** rstr, char* command )
+{
+	FILE* process;
+	char retstr[1035];
 	char strbuff[6000];
 
 	if ( checkForValidCommand ( command ) ) {
@@ -174,21 +200,19 @@ void getLinesFromCommand ( char** rstr, char* command ) {
 		exit ( EXIT_FAILURE );
 	}
 
-  // Open the command for reading
 	process = popen ( command, "r" );
 	if ( process == NULL ) {
 		printf ( _( "Failed to run command\n" ) );
     exit ( 1 );
-  }
+	}
 
 	strcpy ( strbuff, "" );
 
-  // Read the output a line at a time - append it to strbuff
+	// Read the output a line at a time - append it to strbuff
 	while ( fgets ( retstr, sizeof ( retstr ), process ) != NULL ) {
 	  strcat( strbuff, retstr );
-  }
+	}
 
-  // close
 	pclose ( process );
 
 	(*rstr) = malloc ( strlen ( strbuff ) );
@@ -199,8 +223,13 @@ void getLinesFromCommand ( char** rstr, char* command ) {
 
 /**
  * \brief Reads and calculates CPU values.
+ *
+ * \todo-low get rid of exec command
+ * - cat /proc/cpuinfo | grep "cpu MHz" | head -n1 | cut -d" " -f3 | cut -d"." -f1
+ * - sensors -u | grep Tctl -A1 | tail -n1 | cut -d" " -f4 | cut -b1-4
  */
-void getCpuValues ( ) {
+void getCpuValues ( )
+{
 	char* commandRet;
 
 	getLineFromCommand (
@@ -223,8 +252,12 @@ void getCpuValues ( ) {
 
 /**
  * \brief Reads and calculates GPU values.
+ *
+ * \todo-low - get rid of exec command
+ * - nvidia-smi | head -n10 | tail -n1
  */
-void getGpuValues ( ) {
+void getGpuValues ( )
+{
 	char* commandRet;
 	char* iterator;
 	int counter;
@@ -261,8 +294,12 @@ void getGpuValues ( ) {
 
 /**
  * \brief Reads and calculates liquid values.
+ *
+ * \todo-low - get rid of exec command
+ * - liquidctl status | tail -n6 | head -n5
  */
-void getLiquidctlValues ( ) {
+void getLiquidctlValues ( )
+{
 	char* commandRet;
 	char* iterator;
 	int counter;
@@ -299,8 +336,12 @@ void getLiquidctlValues ( ) {
 
 /**
  * \brief Reads and calculates system values.
+ *
+ * \todo-low - get rid of exec command
+ * - sensors | grep "System Fan"
  */
-void getSystemValues ( ) {
+void getSystemValues ( )
+{
 	char* commandRet;
 	char* iterator;
 	int counter;
@@ -338,7 +379,8 @@ void getSystemValues ( ) {
 /**
  * \brief Helperfunction to fetch all values. Only for better reading.
  */
-inline void getValues ( ) {
+inline void getValues ( )
+{
 	getCpuValues ( );
 	getGpuValues ( );
 	getLiquidctlValues ( );
@@ -348,12 +390,13 @@ inline void getValues ( ) {
 
 
 /**
- * \brief Helper function for opening and settings for serial port comunication
+ * \brief helper function for opening, settings and error catch for serial port
+ * comunication.
  */
-void openSerial ( ) {
+void openSerial ( )
+{
 	/// struct for serial port settings
 	struct termios tty;
-
 
 	serialPort = open ( devicePath, O_RDWR );
 
@@ -365,12 +408,13 @@ void openSerial ( ) {
 		exit ( errno );
 	}
 
+	// get serial settings
 	if ( tcgetattr ( serialPort, &tty ) != 0 ) {
 		printf ( _( "Error %i from tcgetattr: %s\n" ), errno, strerror ( errno ) );
 		exit ( errno );
 	}
 
-	// some config changes
+	// some config changes, setting baut rate
 	cfsetispeed ( &tty, B9600 );
 	cfsetospeed ( &tty, B9600 );
 
@@ -386,22 +430,15 @@ void openSerial ( ) {
 
 
 /**
- * \brief Helper function for closing serial port
- */
-inline void closeSerial ( ) {
-	close ( serialPort );
-}
-
-
-
-/**
  * \brief Generates char buffer whitch contains the parsed struct buffer and sending it
  * over serial to the device.
- * \todo
+ *
+ * \todo-medium
  *   - simplify string copying with secound iterator for struct buffer.
  *   - move string handling to parseToBuffer(char**) function.
  */
-void writeSerial ( ) {
+void writeSerial ( )
+{
 	 char* buffer;
 	 register char* iterator;
 	 register unsigned int counter;
@@ -480,18 +517,20 @@ void writeSerial ( ) {
 
 
 /**
- * \brief Output monitor -h for help message
+ * \brief output -h for help message
  */
-void showHelp ( ) {
+void showHelp ( )
+{
 	printf ( _( "monitor for comunication with arduino sysmon\nuse: monitor\n\n" ) );
 }
 
 
 
 /**
- * \brief Output monitor -v for version message
+ * \brief output monitor -v for version message
  */
-void showVersion ( ) {
+void showVersion ( )
+{
 	printf ( _( "monitor 0.1\nCopyright (C) 2024 Niels Neumann  <vatriani.nn@googlemail.com\n\
 License GPLv3+: GNU GPL Version 3 or later <http://gnu.org/licenses/gpl.html>.\
 \nThis is free software: you are free to change and redistribute it.\
@@ -504,7 +543,8 @@ License GPLv3+: GNU GPL Version 3 or later <http://gnu.org/licenses/gpl.html>.\
 /**
  * \brief DEBUG helper function to debug comunication
  */
-inline void debFillBufferTestData ( ) {
+inline void debFillBufferTestData ( )
+{
 	memcpy ( buff.cpuLines[0], "52", 3 );
 	memcpy ( buff.cpuLines[1], "5200", 5 );
 	memcpy ( buff.cpuLines[2], "31", 3 );
@@ -524,7 +564,8 @@ inline void debFillBufferTestData ( ) {
 /**
  * \brief DEBUG outputs buffer struct
  */
-void debOutputBuffer ( ) {
+void debOutputBuffer ( )
+{
 	printf ( _( "GPU Temp: %s\n    utilization: %s\n    Watt: %s\n" ),
 		buff.nvidiaLines[0],
 		buff.nvidiaLines[1],
@@ -547,12 +588,16 @@ void debOutputBuffer ( ) {
 
 
 /**
- * \brief Reciever like arduino init() function.
+ * \brief initialize global variables and allocate space for members of buff struct.
  */
-void init_monitor ( ) {
-	isConnected = 0;
+void init_monitor ( )
+{
 	register unsigned short int counter = 0;
 	size_t allocSize = protoStrLength * sizeof ( char8_t );
+
+	serialPort = 0;
+	timeStart = 0;
+	isConnected = 0;
 
 	// creating buffersize for numbers
 	for (counter = 0; counter < 3; counter++ ) {
@@ -567,17 +612,18 @@ void init_monitor ( ) {
 
 
 
-/*
+/**
  * \brief Helper function for cleanup memory and close the serial port.
  * Get automatically called everytime a exit() is used.
  */
-void close_monitor ( ) {
-	register unsigned short int counter;
+void close_monitor ( )
+{
+	register size_t counter;
 
 	counter = 0;
 
 	if ( serialPort != 0 )
-		closeSerial ( );
+		close ( serialPort );
 
 	// free all allocated buffer
 	for ( ; counter < 3; counter++ ) {
@@ -597,7 +643,8 @@ void close_monitor ( ) {
  * \brief Like arduino loop() function. whitch contains the main loop of
  * recieving data from lm_sensors, parse data and sending it over serial.
  */
-void loop_monitor ( ) {
+void loop_monitor ( )
+{
 	while ( 1 ) {
 		getValues ( );
 
@@ -607,7 +654,7 @@ void loop_monitor ( ) {
 #endif
 
 		writeSerial ( );
-		sleep ( 1 );
+		sleep ( waitSecounds );
 	}
 }
 
@@ -615,8 +662,11 @@ void loop_monitor ( ) {
 
 /**
  * \brief Overrides signal handling for strg+c.
+ *
+ * \param	signo	signal number.
  */
-void sig_handler ( int signo ) {
+void sig_handler ( int signo )
+{
   if ( signo == SIGINT ) {
 		printf ( _( "received SIGINT, closing watchdog\n" ) );
 		exit ( EXIT_SUCCESS );
@@ -625,7 +675,15 @@ void sig_handler ( int signo ) {
 
 
 
-int main (int argc, char** argv) {
+/**
+ * \brief main function, init global variables, parse programm ops, overide exit
+ * function, init localisation, exec loop function.
+ *
+ * \param	argc	number of arguments.
+ * \param argv	arguments as strings in an array.
+ */
+int main (int argc, char** argv)
+{
 	int opt;
 	static struct option longOptions[] = {
 		{ "help", no_argument, 0, 'h' },
@@ -636,10 +694,8 @@ int main (int argc, char** argv) {
 	};
 	int optionIndex;
 
-	serialPort = 0;
 	optionIndex = 0;
 	isDevicePathChanged = 0;
-	timeStart = 0;
 
 	// exit handler for cleanup
 	atexit ( close_monitor );
@@ -648,6 +704,7 @@ int main (int argc, char** argv) {
 		exit ( EXIT_FAILURE );
 	}
 
+	// init localisation
 	setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);

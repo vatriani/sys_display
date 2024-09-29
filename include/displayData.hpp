@@ -5,11 +5,6 @@
  *  \version   0.1
  *  \date      2024
  *  \copyright GNU Public License v3
- *  \pre
- *  \bug
- *  \warning
- *  \deprecated
- *  \todo
  */
 #ifndef DISPLAY_DATA_HPP
 #define DISPLAY_DATA_HPP
@@ -53,13 +48,18 @@ struct displayData {
 
 
 /**
- * \brief Language definition
+ * \brief Language definition for localisation
  */
 struct displayStrings {
+  /// Temperature $(placeholder for value) in celsius
   const std::string t = "temp  $ °C";
+  /// Utilisation $(placeholder for value) in percent
   const std::string u = "utili $ %";
+  /// powerconsumption $(placeholder for value) in watts
   const std::string p = "power $ watt";
+  /// clockspeed $(placeholder for value) in MHz
   const std::string c = "clock $ MHz";
+  /// Speed $(placeholder for value) in RPM
   const std::string s = "speed $ RPM";
 };
 
