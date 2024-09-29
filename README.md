@@ -1,45 +1,58 @@
 [![C/C++ CI](https://github.com/vatriani/sys_display/actions/workflows/c-cpp.yml/badge.svg)](https://github.com/vatriani/sys_display/actions/workflows/c-cpp.yml)[![PlatformIO CI](https://github.com/vatriani/sys_display/actions/workflows/pio.yml/badge.svg)](https://github.com/vatriani/sys_display/actions/workflows/pio.yml)
 
-Monitor program runs on linux host system and fetches some vitals, sends it over
+Monitor programm runs on linux host system and fetches some vitals, sends it over
 serial port to an nodemcu witch displays the vitals on a small screen.
 The small screen switches automatically between displayed pages.
 
-## Compile
-`$ make`
-
-## Upload to nodemcu
-`$ pio run --target upload`
-
-## Run watchdog
-`$ ./monitor`
-
-## Infos to display
-### nvidia
-`nvidia-smi --query-gpu=temperature.gpu,utilization.gpu,power.draw --format=csv -l 5`
-
-Outputs:
+### Displayed infos
 - GPU temperature
 - GPU utilization
-- Power draw
-### lm_sensors
-`sensors -A -u`
-
-Outputs:
+- GPU Power draw
 - CPU temperature
 - CPU MHZ
 - CPU utilization
-
-- Fan1
-- Fan2
-- Fan3
-### liquidctl
-`liquidctl status`
-
-Outputs:
+- Fan 1 Speed
+- Fan 2 Speed
+- Fan 3 Speed
 - Fanspeed
 - Pumpspeed
-- Watertemp
+- Water temperature
 
-## Libaries used
-### u8g2 Display libary
-https://github.com/olikraus/u8g2
+## Monitor programm on host system
+Deamon programm constantly checking system vitals with  
+
+`$ nvidia-smi --query-gpu=temperature.gpu,utilization.gpu,power.draw --format=csv -l 5`  
+`$ sensors -A -u`  
+`$ liquidctl status`  
+
+### Compile
+`$ make monitor`
+
+### Run watchdog
+`$ ./monitor`
+
+Monitor programm can also runned in background with `$ ./monitor &`.  
+For developing or debugging `$ ./monitor -D`.  
+If the monitor programm can't find the device, check for /dev/ttyUSB0. It's
+used as an default value. Changes with `$ ./monitor -p {device-path}`.
+
+
+
+## nodemcu
+Simple solution for showing system vitals. An nodemcu would be an overkill, but
+an Arduino should do the same thing. (with some code changes)
+
+### Connecting the display
+- D1 => SDA
+- D2 => SCK
+- 3V => VCC
+- G => GND
+
+### Compile
+`$ make pio`
+
+## Upload to nodemcu
+`$ make upload`
+
+## Libaries used:
+- u8g2 Display libary - https://github.com/olikraus/u8g2
