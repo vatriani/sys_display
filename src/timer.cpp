@@ -1,3 +1,11 @@
+/**
+ *  \file      timer.cpp
+ *  \brief     Implementations of Timer class
+ *  \author    Niels Neumann
+ *  \version   0.1
+ *  \date      2024
+ *  \copyright GNU Public License v3
+ */
 #include <Arduino.h>
 
 #include "timer.hpp"
@@ -10,10 +18,12 @@ Timer::Timer ( ) {
 
 
 
+
 Timer::Timer ( unsigned int var ) {
   delay = var;
   activate = true;
 }
+
 
 
 
