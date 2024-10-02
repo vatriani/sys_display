@@ -16,6 +16,7 @@
 
 #include "display.hpp"
 #include "serialport.hpp"
+#include "timer.hpp"
 #include "displaydata.hpp"
 
 
@@ -25,6 +26,8 @@ private:
   Display* display;
   SerialPort* serial;
   displayData* data;
+  Timer* updatePage;
+  
   /// for handling all time relevant things
   long previousMillis;
   bool statusLED;

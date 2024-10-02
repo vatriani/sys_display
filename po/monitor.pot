@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-02 22:45+0200\n"
+"POT-Creation-Date: 2024-10-03 00:16+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -52,7 +52,7 @@ msgstr ""
 msgid "Error %i from tcsetattr: %s\n"
 msgstr ""
 
-#: monitor.c:465 monitor.c:529
+#: monitor.c:465 monitor.c:529 monitor.c:544
 #, c-format
 msgid ""
 "monitor for comunication with arduino sysmon\n"
@@ -60,7 +60,7 @@ msgid ""
 "\n"
 msgstr ""
 
-#: monitor.c:474 monitor.c:539
+#: monitor.c:474 monitor.c:539 monitor.c:554
 #, c-format
 msgid ""
 "monitor 0.1\n"
@@ -72,7 +72,7 @@ msgid ""
 "\n"
 msgstr ""
 
-#: monitor.c:507 monitor.c:574
+#: monitor.c:507 monitor.c:574 monitor.c:589
 #, c-format
 msgid ""
 "GPU Temp: %s\n"
@@ -80,7 +80,7 @@ msgid ""
 "    Watt: %s\n"
 msgstr ""
 
-#: monitor.c:511 monitor.c:578
+#: monitor.c:511 monitor.c:578 monitor.c:593
 #, c-format
 msgid ""
 "CPU Temp: %s\n"
@@ -88,7 +88,7 @@ msgid ""
 "    utilization: %s\n"
 msgstr ""
 
-#: monitor.c:515 monitor.c:582
+#: monitor.c:515 monitor.c:582 monitor.c:597
 #, c-format
 msgid ""
 "Liq fanspeed: %s\n"
@@ -96,7 +96,7 @@ msgid ""
 "    watertemp: %s\n"
 msgstr ""
 
-#: monitor.c:519 monitor.c:586
+#: monitor.c:519 monitor.c:586 monitor.c:601
 #, c-format
 msgid ""
 "SYS fan1: %s\n"
@@ -104,12 +104,32 @@ msgid ""
 "    fan3: %s\n"
 msgstr ""
 
-#: monitor.c:600 monitor.c:676
+#: monitor.c:600 monitor.c:676 monitor.c:691
 #, c-format
 msgid "received SIGINT, closing watchdog\n"
 msgstr ""
 
-#: monitor.c:625 monitor.c:708
+#: monitor.c:625 monitor.c:708 monitor.c:723
 #, c-format
 msgid "can't catch SIGINT\n"
+msgstr ""
+
+#: monitor.c:405
+#, c-format
+msgid "openSerial: No such device: %s\n"
+msgstr ""
+
+#: monitor.c:407
+#, c-format
+msgid "openSerial: Error %i from open: %s\n"
+msgstr ""
+
+#: monitor.c:413
+#, c-format
+msgid "openSerial: Error %i from tcgetattr: %s\n"
+msgstr ""
+
+#: monitor.c:438
+#, c-format
+msgid "openSerial: Error %i from tcsetattr: %s\n"
 msgstr ""

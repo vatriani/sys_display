@@ -20,6 +20,7 @@ Monitor::Monitor ( ) {
   display = new Display ( );
   data = new displayData;
   serial = new SerialPort ( );
+  updatePage = new Timer ( 2000 );
 
   display->setDisplayData ( data );
 }
@@ -86,31 +87,22 @@ void Monitor::parseSerial ( std::string recv ) {
  * Arduino loop ()
  */
 void Monitor::mainLoop ( ) {
-  unsigned long currentMillis;
-
   while ( 1 ) {
-    currentMillis = millis ( );
 
     if ( checkErrors ( ) == true ) {
       display->drawErr ( serial->getErr ( ) );
     }
     else {
       serial->loop ( );
+      updatePage->loop ( );
 
       if ( serial->newData )
         parseSerial ( serial->recv ( ) );
 
       display->draw ( );
 
-      if ( update )
+      if ( updatePage->isUpdate ( ) )
         display->next ( );
-    }
-
-    update = false;
-
-    if ( currentMillis - previousMillis >= INTERVAL_PAGEFLIP ) {
-      update = true;
-      previousMillis = currentMillis;
     }
   }
 }
