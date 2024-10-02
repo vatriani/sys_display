@@ -47,7 +47,7 @@ bool Timer::isEnabled ( ) { return activate; }
 
 void Timer::loop ( ) {
   if ( activate ) {
-    unsigned long currentMillis = currentMillis = millis ( );
+    unsigned long currentMillis = millis ( );
 
     if ( update ) update = false;
 
