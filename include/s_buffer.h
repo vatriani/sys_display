@@ -18,8 +18,15 @@
     #define char8_t unsigned char
 #endif
 
+
+
+#ifdef __cplusplus
 namespace  s_buffer
 {
+#endif
+
+
+
 /// Protocol version
 static const char8_t protoVersion = 0x01;
 /// seperator between values
@@ -76,6 +83,7 @@ struct _buffer {
 /// typedef for better readability
 typedef struct _buffer buffer;
 
-
-} 
+#ifdef __cplusplus
+}
+#endif
 #endif
