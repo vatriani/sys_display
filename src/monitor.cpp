@@ -1,7 +1,6 @@
 #include "monitor.hpp"
 
 #include <Arduino.h>
-#include <EEPROM.h>
 #include <string>
 
 #include "s_buffer.h"
@@ -12,30 +11,17 @@
  * Definition of setup() in Arduino
  */
 Monitor::Monitor ( ) {
-  pinMode ( LED_BUILTIN, OUTPUT );
+  //pinMode ( LED_BUILTIN, OUTPUT );
+
+  previousMillis = 0;
+  statusLED = false;
+  update = true;
 
   display = new Display ( );
   data = new displayData;
-
   serial = new SerialPort ( );
 
-  EEPROM.begin ( s_buffer::protoMessLength );
-
   display->setDisplayData ( data );
-
-  // testdata
-  data->cpu_u = "2";
-  data->cpu_c = "5120";
-  data->cpu_t = "41";
-  data->gpu_t = "61";
-  data->gpu_u = "2";
-  data->gpu_p = "14";
-  data->fan1_s = "761";
-  data->fan2_s = "1028";
-  data->fan3_s = "759";
-  data->liquid_f = "620";
-  data->liquid_p = "1800";
-  data->liquid_t = "31,2";
 }
 
 
@@ -46,8 +32,52 @@ Monitor::~Monitor ( ) {
 
 
 
-void Monitor::parseSerial ( std::string ) {
+std::vector<std::string> Monitor::SplitString ( std::string str, std::string delimeter) {
+  std::vector<std::string> splittedStrings = {};
+  size_t pos = 0;
 
+  while ( ( pos = str.find ( delimeter ) ) != std::string::npos ) {
+    std::string token = str.substr ( 0, pos );
+    if ( token.length ( ) > 0 )
+      splittedStrings.push_back ( token );
+    str.erase ( 0, pos + delimeter.length ( ) );
+  }
+
+  if ( str.length ( ) > 0 )
+    splittedStrings.push_back ( str );
+  return splittedStrings;
+}
+
+
+
+void Monitor::toggleStatus ( ) {
+  if (statusLED == true ) {
+    digitalWrite ( LED_BUILTIN, LOW );
+    statusLED = false;
+  }
+  else {
+    digitalWrite ( LED_BUILTIN, HIGH );
+    statusLED = true;
+  }
+}
+
+
+
+void Monitor::parseSerial ( std::string recv ) {
+  std::vector<std::string> liste = SplitString ( recv, ";" );
+
+  data->cpu_t = liste.at(1);
+  data->cpu_c = liste.at(2);
+  /*data->cpu_u = liste.at(3);
+  data->liquid_f = liste.at(4);
+  data->liquid_p = liste.at(5);
+  data->liquid_t = liste.at(6);
+  data->gpu_t = liste.at(7);
+  data->gpu_u = liste.at(8);
+  data->gpu_p = liste.at(9);
+  data->fan1_s = liste.at(10);
+  data->fan2_s = liste.at(11);
+  data->fan3_s = liste.at(12);*/
 }
 
 
@@ -56,22 +86,35 @@ void Monitor::parseSerial ( std::string ) {
  * Arduino loop ()
  */
 void Monitor::mainLoop ( ) {
+  unsigned long currentMillis;
+
   while ( 1 ) {
+    currentMillis = millis ( );
+
     if ( checkErrors ( ) == true ) {
       display->drawErr ( serial->getErr ( ) );
     }
     else {
       serial->loop ( );
 
+      if ( serial->newData )
+        parseSerial ( serial->recv ( ) );
+
       display->draw ( );
-      display->next ( );
+
+      if ( update )
+        display->next ( );
     }
-    digitalWrite ( LED_BUILTIN, HIGH );
-    delay ( 1000 );
-    digitalWrite ( LED_BUILTIN, LOW );
-    delay ( 1000 );
+
+    update = false;
+
+    if ( currentMillis - previousMillis >= INTERVAL_PAGEFLIP ) {
+      update = true;
+      previousMillis = currentMillis;
+    }
   }
 }
+
 
 
 bool Monitor::checkErrors ( ) {

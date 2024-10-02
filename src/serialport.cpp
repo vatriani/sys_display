@@ -1,11 +1,15 @@
 #include "serialport.hpp"
 
+
+
 #include <Arduino.h>
+
+
 
 SerialPort::SerialPort ( ) {
   newData = false;
 
-  Serial.begin(9600);
+  Serial.begin ( 115200 );
 
   while (!Serial) {
     break; //
@@ -13,14 +17,20 @@ SerialPort::SerialPort ( ) {
   //err="test fehler";
 }
 
-SerialPort::~SerialPort ( ) {
 
+
+SerialPort::~SerialPort ( ) {
+  Serial.end ( );
 }
+
+
 
 void SerialPort::loop ( ) {
   if ( Serial.available() > 0 ) newData = true;
   else newData = false;
 }
+
+
 
 std::string SerialPort::recv ( ) {
   std::string ret;
@@ -30,6 +40,7 @@ std::string SerialPort::recv ( ) {
 
   return std::string ( recvChar );
 }
+
 
 
 std::string SerialPort::getErr ( ) {

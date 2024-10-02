@@ -10,6 +10,9 @@
 #define MONITOR_HPP
 
 #include <string>
+#include <vector>
+
+#define INTERVAL_PAGEFLIP 2000
 
 #include "display.hpp"
 #include "serialport.hpp"
@@ -22,7 +25,14 @@ private:
   Display* display;
   SerialPort* serial;
   displayData* data;
+  /// for handling all time relevant things
+  long previousMillis;
+  bool statusLED;
+  bool update;
+
   bool checkErrors ( );
+  void toggleStatus ( );
+  std::vector<std::string> SplitString ( std::string, std::string );
 
 public:
   Monitor ( );
