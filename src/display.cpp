@@ -42,7 +42,7 @@ Display::Display ( ) {
 
   drawWelcome ( );
 
-  actualPage = 0;
+  actualPage = -1;
 }
 
 
@@ -56,19 +56,29 @@ void Display::drawHeader ( ) {
 }
 
 
-bool Display::isWelcomeScreen ( ) { return welcomeScreen; }
-void Display::welcomeScreenOff ( ) { welcomeScreen = false; }
+
+bool Display::isWelcomeScreen ( ) {
+  return welcomeScreen;
+}
+
+
+
+void Display::welcomeScreenOff ( ) {
+  welcomeScreen = false;
+}
+
 
 
 void Display::drawWelcome ( ) {
   welcomeScreen = true;
   u8g2->firstPage ( );
   do {
-    u8g2->setFont ( u8g2_font_10x20_tf );
+    u8g2->setFont ( u8g_font_profont17r );
     u8g2->drawUTF8 ( 50, 14+16, "sys_mon" );
+    u8g2->setFont ( u8g_font_profont15r );
+    u8g2->drawUTF8 ( 50, 14+16+14, "beta 0.1" );
     u8g2->drawXBMP( 0, 16, 50, 48, arch_bits );
   } while ( u8g2->nextPage ( ) );
-
 }
 
 
