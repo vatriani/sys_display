@@ -60,7 +60,7 @@ static unsigned long uTimeStart;
 /// old timer value initialize at program start
 static unsigned long timeStart;
 /// wait time after getting new values and sending it over serial
-const short int waitSecounds = 2;
+const short int waitSecounds = 1;
 
 
 /**
@@ -235,7 +235,7 @@ void getCpuValues ( )
 	getLineFromCommand (
 		&commandRet,
 		"cat /proc/cpuinfo | grep \"cpu MHz\" | head -n1 | cut -d\" \" -f3 | cut -d\".\" -f1");
-	memcpy ( (void*) buff.cpuLines[1], commandRet, strlen ( commandRet ) - 1 );
+	memcpy ( (void*) buff.cpuLines[1], commandRet, strlen ( commandRet ) );
 
 	getLineFromCommand (
 		&commandRet,
@@ -398,29 +398,44 @@ void openSerial ( )
 	/// struct for serial port settings
 	struct termios tty;
 
-	serialPort = open ( devicePath, O_RDWR );
+	serialPort = open ( devicePath, O_RDWR | O_NOCTTY );
 
 	if ( serialPort < 0 ) {
 		if ( errno == 2 )
-			printf ( _( "No such device: %s\n" ), devicePath );
+			printf ( _( "openSerial: No such device: %s\n" ), devicePath );
 		else
-			printf ( _( "Error %i from open: %s\n" ), errno, strerror ( errno ) );
+			printf ( _( "openSerial: Error %i from open: %s\n" ), errno, strerror ( errno ) );
 		exit ( errno );
 	}
 
 	// get serial settings
 	if ( tcgetattr ( serialPort, &tty ) != 0 ) {
-		printf ( _( "Error %i from tcgetattr: %s\n" ), errno, strerror ( errno ) );
+		printf ( _( "openSerial: Error %i from tcgetattr: %s\n" ), errno, strerror ( errno ) );
 		exit ( errno );
 	}
 
 	// some config changes, setting baut rate
-	cfsetispeed ( &tty, B9600 );
-	cfsetospeed ( &tty, B9600 );
+	cfsetispeed ( &tty, B115200 );
+	cfsetospeed ( &tty, B115200 );
+
+	// 8N1
+	tty.c_cflag &= ~PARENB;
+	tty.c_cflag &= ~CSTOPB;
+	tty.c_cflag &= ~CSIZE;
+	tty.c_cflag |= CS8;
+	// no flow control
+	tty.c_cflag &= ~CRTSCTS;
+	tty.c_cflag |= CREAD | CLOCAL;  // turn on READ & ignore ctrl lines
+	tty.c_iflag &= ~(IXON | IXOFF | IXANY); // turn off s/w flow ctrl
+	tty.c_lflag &= ~(ICANON | ECHO | ECHOE | ISIG); // make raw
+	tty.c_oflag &= ~OPOST; // make raw
+	tty.c_cflag &= ~HUPCL; // no hungup
+	tty.c_cc[VMIN]  = 0;
+	tty.c_cc[VTIME] = 20;
 
 	// apply tty settings, also checking for error
 	if ( tcsetattr ( serialPort, TCSANOW, &tty ) != 0 ) {
-		printf ( _( "Error %i from tcsetattr: %s\n" ), errno, strerror ( errno ) );
+		printf ( _( "openSerial: Error %i from tcsetattr: %s\n" ), errno, strerror ( errno ) );
 		exit ( errno );
 	}
 
@@ -446,6 +461,9 @@ void writeSerial ( )
 	 iterator = buffer;
 
 	 memcpy ( iterator, ( void* ) &protoVersion , 1 );
+	 iterator += sizeof ( char8_t );
+
+	 memcpy ( iterator, ( void* ) &protoSeperator , 1 );
 	 iterator += sizeof ( char8_t );
 
 	 for ( counter = 0; counter < 3; counter++ ) {
@@ -499,6 +517,9 @@ void writeSerial ( )
 			 1 );
 		 iterator += sizeof ( char8_t );
 	 }
+
+	 iterator -= sizeof ( char8_t );
+	 memcpy ( iterator, ( void* ) &protoSeperator, 1);
 
 	 iterator -= sizeof ( char8_t );
 	 memcpy ( iterator, ( void* ) &protoLastByte, 1);
