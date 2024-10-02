@@ -12,7 +12,7 @@
 #include <string>
 #include <vector>
 
-#define INTERVAL_PAGEFLIP 2000
+
 
 #include "display.hpp"
 #include "serialport.hpp"
@@ -27,7 +27,7 @@ private:
   SerialPort* serial;
   displayData* data;
   Timer* updatePage;
-  
+
   /// for handling all time relevant things
   long previousMillis;
   bool statusLED;
