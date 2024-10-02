@@ -20,7 +20,7 @@ Monitor::Monitor ( ) {
   display = new Display ( );
   data = new displayData;
   serial = new SerialPort ( );
-  updatePage = new Timer ( 2000 );
+  updatePage = new Timer ( 5000 );
 
   display->setDisplayData ( data );
 }
@@ -99,10 +99,15 @@ void Monitor::mainLoop ( ) {
       if ( serial->newData )
         parseSerial ( serial->recv ( ) );
 
-      display->draw ( );
+      if ( !display->isWelcomeScreen ( ) ) display->draw ( );
 
-      if ( updatePage->isUpdate ( ) )
+      if ( updatePage->isUpdate ( ) ) {
+        if ( display->isWelcomeScreen ( ) ) {
+          display->welcomeScreenOff ( );
+          updatePage->setDelay ( 2000 );
+        }
         display->next ( );
+      }
     }
   }
 }

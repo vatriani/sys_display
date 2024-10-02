@@ -38,6 +38,7 @@ private:
     "SYS"
   };
   const unsigned int line[3] = { 31, 46, 61 };
+  bool welcomeScreen;
 
   void drawHeader ( );
   void drawContend ( );
@@ -48,10 +49,13 @@ public:
   ~Display ( );
 
   void draw ( );
+  void drawWelcome ( );
   void next ( );
   void drawErr ( std::string err );
 
   void setDisplayData ( displayData* dataN );
+  bool isWelcomeScreen ( );
+  void welcomeScreenOff ( );
 };
 
 #endif
