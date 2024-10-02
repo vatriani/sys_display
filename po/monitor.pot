@@ -8,51 +8,51 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-28 11:45+0200\n"
+"POT-Creation-Date: 2024-10-02 22:45+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: monitor.c:93
+#: monitor.c:93 monitor.c:135
 #, c-format
 msgid "counted commands %i, counted valid commands %i\n"
 msgstr ""
 
-#: monitor.c:114 monitor.c:149
+#: monitor.c:114 monitor.c:149 monitor.c:160 monitor.c:199
 #, c-format
 msgid "No valid command or isn't listed in whitelist.\n"
 msgstr ""
 
-#: monitor.c:121 monitor.c:156
+#: monitor.c:121 monitor.c:156 monitor.c:167 monitor.c:205
 #, c-format
 msgid "Failed to run command\n"
 msgstr ""
 
-#: monitor.c:341
+#: monitor.c:341 monitor.c:405
 #, c-format
 msgid "No such device: %s\n"
 msgstr ""
 
-#: monitor.c:343
+#: monitor.c:343 monitor.c:407
 #, c-format
 msgid "Error %i from open: %s\n"
 msgstr ""
 
-#: monitor.c:348
+#: monitor.c:348 monitor.c:413
 #, c-format
 msgid "Error %i from tcgetattr: %s\n"
 msgstr ""
 
-#: monitor.c:358
+#: monitor.c:358 monitor.c:423
 #, c-format
 msgid "Error %i from tcsetattr: %s\n"
 msgstr ""
 
-#: monitor.c:465
+#: monitor.c:465 monitor.c:529
 #, c-format
 msgid ""
 "monitor for comunication with arduino sysmon\n"
@@ -60,7 +60,7 @@ msgid ""
 "\n"
 msgstr ""
 
-#: monitor.c:474
+#: monitor.c:474 monitor.c:539
 #, c-format
 msgid ""
 "monitor 0.1\n"
@@ -72,7 +72,7 @@ msgid ""
 "\n"
 msgstr ""
 
-#: monitor.c:507
+#: monitor.c:507 monitor.c:574
 #, c-format
 msgid ""
 "GPU Temp: %s\n"
@@ -80,7 +80,7 @@ msgid ""
 "    Watt: %s\n"
 msgstr ""
 
-#: monitor.c:511
+#: monitor.c:511 monitor.c:578
 #, c-format
 msgid ""
 "CPU Temp: %s\n"
@@ -88,7 +88,7 @@ msgid ""
 "    utilization: %s\n"
 msgstr ""
 
-#: monitor.c:515
+#: monitor.c:515 monitor.c:582
 #, c-format
 msgid ""
 "Liq fanspeed: %s\n"
@@ -96,7 +96,7 @@ msgid ""
 "    watertemp: %s\n"
 msgstr ""
 
-#: monitor.c:519
+#: monitor.c:519 monitor.c:586
 #, c-format
 msgid ""
 "SYS fan1: %s\n"
@@ -104,12 +104,12 @@ msgid ""
 "    fan3: %s\n"
 msgstr ""
 
-#: monitor.c:600
+#: monitor.c:600 monitor.c:676
 #, c-format
 msgid "received SIGINT, closing watchdog\n"
 msgstr ""
 
-#: monitor.c:625
+#: monitor.c:625 monitor.c:708
 #, c-format
 msgid "can't catch SIGINT\n"
 msgstr ""
