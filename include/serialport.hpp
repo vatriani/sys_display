@@ -15,7 +15,7 @@
 
 class SerialPort {
 private:
-  buffer received;
+  s_buffer::buffer received;
   std::string err;
 
 public:

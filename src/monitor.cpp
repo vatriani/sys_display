@@ -19,7 +19,7 @@ Monitor::Monitor ( ) {
 
   serial = new SerialPort ( );
 
-  EEPROM.begin ( protoMessLength );
+  EEPROM.begin ( s_buffer::protoMessLength );
 
   display->setDisplayData ( data );
 

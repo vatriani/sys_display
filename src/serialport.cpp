@@ -24,9 +24,9 @@ void SerialPort::loop ( ) {
 
 std::string SerialPort::recv ( ) {
   std::string ret;
-  char recvChar[protoMessLength];
+  char recvChar[s_buffer::protoMessLength];
 
-  Serial.readBytesUntil ( protoLastByte, recvChar, protoMessLength );
+  Serial.readBytesUntil ( s_buffer::protoLastByte, recvChar, s_buffer::protoMessLength );
 
   return std::string ( recvChar );
 }

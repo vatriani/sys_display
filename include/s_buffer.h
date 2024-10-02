@@ -18,22 +18,23 @@
     #define char8_t unsigned char
 #endif
 
-
+namespace  s_buffer
+{
 /// Protocol version
-const char8_t protoVersion = 0x01;
+static const char8_t protoVersion = 0x01;
 /// seperator between values
-const char8_t protoSeperator = ';';
+static const char8_t protoSeperator = ';';
 /// definition of last byte in communication
-const char8_t protoLastByte = 0x00;
+static const char8_t protoLastByte = 0x00;
 /// Acknolege sign
-const char8_t protoAcc = 0x01;
+static const char8_t protoAcc = 0x01;
 /// Error sign
-const char8_t protoError = 0x02;
+static const char8_t protoError = 0x02;
 
 /// setting string lengh to 4 + ZERO by string definition
-const unsigned int protoStrLength = 5;
+static const unsigned int protoStrLength = 5;
 /// max message length
-const int protoMessLength = 12 * protoStrLength + 2;
+static const int protoMessLength = 12 * protoStrLength + 2;
 
 
 /**
@@ -76,5 +77,5 @@ struct _buffer {
 typedef struct _buffer buffer;
 
 
-
+} 
 #endif
