@@ -13,6 +13,7 @@
 
 
 Timer::Timer ( ) {
+  delay = 1000;
   activate = true;
 }
 
