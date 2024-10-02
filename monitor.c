@@ -84,7 +84,7 @@ float cpuavg ( )
 
 	if ( timeStart )
 		ret = ( (double)( uTimeEnd - uTimeStart ) ) /
-		( (double)( timeEnd - timeStart ) )*100.0;
+		( (double)( timeEnd - timeStart ) ) * 100.0;
 
 	uTimeStart = uTimeEnd;
 	timeStart = timeEnd;
