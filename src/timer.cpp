@@ -19,12 +19,10 @@ Timer::Timer ( ) {
 
 
 
-
 Timer::Timer ( unsigned int var ) {
   delay = var;
   activate = true;
 }
-
 
 
 
@@ -34,15 +32,33 @@ Timer::~Timer ( ) {
 
 
 
-bool Timer::isUpdate ( ) { return update; }
+bool Timer::isUpdate ( ) {
+  return update;
+}
 
-void Timer::setDelay ( unsigned int val ) { delay = val; }
 
-void Timer::enable ( ) { activate = true; }
 
-void Timer::disable ( ) { activate = false; }
+void Timer::setDelay ( unsigned int val ) {
+  delay = val;
+}
 
-bool Timer::isEnabled ( ) { return activate; }
+
+
+void Timer::enable ( ) {
+  activate = true;
+}
+
+
+
+void Timer::disable ( ) {
+  activate = false;
+}
+
+
+
+bool Timer::isEnabled ( ) {
+  return activate;
+}
 
 
 

@@ -92,6 +92,7 @@ void Monitor::mainLoop ( ) {
     if ( checkErrors ( ) == true ) {
       display->drawErr ( serial->getErr ( ) );
     }
+
     else {
       serial->loop ( );
       updatePage->loop ( );
