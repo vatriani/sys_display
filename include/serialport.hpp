@@ -18,6 +18,9 @@ private:
   s_buffer::buffer received;
   std::string err;
 
+protected:
+  bool isConnected;
+
 public:
   bool newData;
 

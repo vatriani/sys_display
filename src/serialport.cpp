@@ -14,6 +14,7 @@ SerialPort::SerialPort ( ) {
   while (!Serial) {
     break; //
   }
+  isConnected = true;
   //err="test fehler";
 }
 
