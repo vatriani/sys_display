@@ -16,13 +16,13 @@ $(TARGET): $(SRCS)
 	gcc $(FLAGS) $(SRCS) -o $(TARGET)
 
 pio:
-	pio run
+	pio run -e nodemcuv2
 
 upload:
-	pio run --target upload
+	pio run --target upload -e nodemcuv2
 
-test:
-	pio test
+local_test:
+	pio test -e native
 
 run:
 	./$(TARGET)
