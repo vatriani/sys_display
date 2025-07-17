@@ -1,5 +1,10 @@
 name: C++ local tests
 
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
 on: [push]
 
 jobs:

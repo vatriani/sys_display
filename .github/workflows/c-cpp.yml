@@ -1,5 +1,10 @@
 name: C Monitor-app
 
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
 on:
   push:
     branches: [ "master" ]
