@@ -12,13 +12,7 @@
 
 
 #include <string>
-#include <libintl.h>
 
-
-/// only for localisation purpose
-#define PACKAGE "monitor"
-/// only for localisation purpose
-#define LOCALEDIR "./po"
 
 
 /**
@@ -58,7 +52,7 @@ struct displayData {
  */
 struct displayStrings {
   /// Temperature $(placeholder for value) in celsius
-  const std::string t = _("temp  $ °C");
+  const std::string t = "temp  $ °C";
   /// Utilisation $(placeholder for value) in percent
   const std::string u = "utili $ %";
   /// powerconsumption $(placeholder for value) in watts
