@@ -1,4 +1,4 @@
-name: PlatformIO CI
+name: PlatformIO upload
 
 on: [push]
 
@@ -21,4 +21,4 @@ jobs:
         run: pip install --upgrade platformio
 
       - name: Build PlatformIO Project
-        run: pio run
+        run: make pio

@@ -1,4 +1,4 @@
-name: C Monitor-app
+name: C++ local tests
 
 on:
   push:
@@ -13,5 +13,5 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - name: make monitor
-      run: make monitor
+    - name: make local_test
+      run: make local_test
