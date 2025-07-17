@@ -3,8 +3,8 @@
  *  \brief      Defines the Display class to handle the screen connected to an
  *              NodeMCU.
  *  \author     Niels Neumann
- *  \version    0.1
- *  \date       2024
+ *  \version    0.2
+ *  \date       2025
  *  \copyright  GNU Public License v3
  */
 #ifndef DISPLAY_HPP

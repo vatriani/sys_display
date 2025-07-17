@@ -2,8 +2,8 @@
  *  \file      monitor.h
  *  \brief     Defines the Monitor class as main programm
  *  \author    Niels Neumann
- *  \version   0.1
- *  \date      2024
+ *  \version   0.2
+ *  \date      2025
  *  \copyright GNU Public License v3
  */
 #ifndef MONITOR_HPP
