@@ -234,8 +234,11 @@ void getCpuValues ( )
 
 	getLineFromCommand (
 		&commandRet,
-		"cat /proc/cpuinfo | grep \"cpu MHz\" | head -n1 | cut -d\" \" -f3 | cut -d\".\" -f1");
-	memcpy ( (void*) buff.cpuLines[1], commandRet, strlen ( commandRet ) );
+		"cat /proc/cpuinfo | grep \"cpu MHz\" | head -n1 | cut -d\" \" -f3 | cut -b1-4");
+
+	int test = atoi(commandRet);
+	int length = snprintf( NULL, 0, "%d", test );
+	snprintf( (char*) buff.cpuLines[1], length + 1, "%d", test );
 
 	getLineFromCommand (
 		&commandRet,
@@ -348,7 +351,7 @@ void getSystemValues ( )
 
 	getLinesFromCommand (
 		&commandRet,
-		"sensors | grep \"System Fan\"");
+		"sensors | grep \"fan\"");
 
 	// divide string
 	iterator = strtok( commandRet, " ");
@@ -356,13 +359,13 @@ void getSystemValues ( )
 
 	while ( iterator != NULL ) {
 		switch ( counter ) {
-			case 15: // utilization
+			case 7: // utilization
 				memcpy ( (void*) buff.systemLines[0], iterator, strlen ( iterator ) + 1 );
 				break;
-			case 27: // utilization
+			case 19: // utilization
 				memcpy ( (void*) buff.systemLines[1], iterator, strlen ( iterator ) + 1 );
 				break;
-			case 39: // utilization
+			case 31: // utilization
 				memcpy ( (void*) buff.systemLines[2], iterator, strlen ( iterator ) + 1 );
 				break;
 		}

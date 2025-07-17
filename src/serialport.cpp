@@ -12,10 +12,12 @@ SerialPort::SerialPort ( ) {
   Serial.begin ( 115200 );
 
   while (!Serial) {
-    break; //
+    //if ( Serial )
+      //err = "Waiting for connection";
+    break;
   }
   isConnected = true;
-  //err="test fehler";
+
 }
 
 

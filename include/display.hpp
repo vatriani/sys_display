@@ -16,9 +16,26 @@
 #include <string>
 
 #include "defines.h"
-#include "string.h"
+#include "timer.hpp"
 #include "displaydata.hpp"
 
+
+
+enum DisplayState {
+  DRAW,
+  WELCOME,
+  ERROR,
+  WAITING
+};
+
+
+
+enum Page {
+  CPU,
+  LIQUID,
+  GPU,
+  SYS
+};
 
 
 
@@ -28,7 +45,8 @@
 class Display {
 private:
   U8G2_SH1106_128X64_NONAME_1_SW_I2C* u8g2;
-  unsigned char actualPage;
+  Timer updatePage;
+  Page actualPage;
   displayStrings displayString;
   displayData* data;
   const char* title[4] = {
@@ -38,24 +56,25 @@ private:
     "SYS"
   };
   const unsigned int line[3] = { 31, 46, 61 };
-  bool welcomeScreen;
 
   void drawHeader ( );
   void drawContend ( );
+  void drawWelcome ( );
   void sReplace ( std::string* input, std::string replace );
 
 public:
   Display ( );
   ~Display ( );
 
+  DisplayState state;
+
   void draw ( );
-  void drawWelcome ( );
   void next ( );
+
+  void drawWaiting ( std::string message = "" );
   void drawErr ( std::string err );
 
   void setDisplayData ( displayData* dataN );
-  bool isWelcomeScreen ( );
-  void welcomeScreenOff ( );
 };
 
 #endif

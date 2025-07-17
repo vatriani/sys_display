@@ -10,13 +10,12 @@
 #define MONITOR_HPP
 
 #include <string>
-#include <vector>
+#include <list>
 
 
 
 #include "display.hpp"
 #include "serialport.hpp"
-#include "timer.hpp"
 #include "displaydata.hpp"
 
 
@@ -26,15 +25,8 @@ private:
   Display* display;
   SerialPort* serial;
   displayData* data;
-  Timer* updatePage;
-
-  /// for handling all time relevant things
-  long previousMillis;
-  bool statusLED;
-  bool update;
 
   bool checkErrors ( );
-  void toggleStatus ( );
   std::vector<std::string> SplitString ( std::string, std::string );
 
 public:

@@ -15,6 +15,7 @@
 Timer::Timer ( ) {
   delay = 1000;
   activate = true;
+  update = true;
 }
 
 
@@ -22,6 +23,7 @@ Timer::Timer ( ) {
 Timer::Timer ( unsigned int var ) {
   delay = var;
   activate = true;
+  update = true;
 }
 
 
