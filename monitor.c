@@ -460,7 +460,7 @@ void writeSerial ( )
 	 register char* iterator;
 	 register unsigned int counter;
 
-	 buffer = malloc ( sizeof ( char8_t ) * 12 * protoStrLength + sizeof ( char8_t ) * 2 );
+	 buffer = malloc ( sizeof ( char8_t ) * protoMessLength );
 	 iterator = buffer;
 
 	 memcpy ( iterator, ( void* ) &protoVersion , 1 );
@@ -521,7 +521,7 @@ void writeSerial ( )
 		 iterator += sizeof ( char8_t );
 	 }
 
-	 iterator -= sizeof ( char8_t );
+	 iterator += sizeof ( char8_t );
 	 memcpy ( iterator, ( void* ) &protoSeperator, 1);
 
 	 iterator -= sizeof ( char8_t );
