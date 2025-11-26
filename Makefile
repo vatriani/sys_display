@@ -1,5 +1,8 @@
 DEBUG := 1
 
+CC = gcc
+CFLAGS =
+LDFLAGS = add PHONY rules.
 FLAGS = -Wall -mtune=native -march=native
 SRCS = monitor.c
 TARGET = monitor
@@ -10,10 +13,12 @@ else
 FLAGS += -O2
 endif
 
+.PHONY: clean
+
 all: $(TARGET) po/$(TARGET).pot pio
 
 $(TARGET): $(SRCS)
-	gcc $(FLAGS) $(SRCS) -o $(TARGET)
+	$(CC) $(FLAGS) $(SRCS) -o $(TARGET)
 
 pio:
 	pio run -e nodemcuv2
@@ -21,13 +26,15 @@ pio:
 upload:
 	pio run --target upload -e nodemcuv2
 
+ci-check:
+test:
 local_test:
 	pio test -e native
 
 run:
 	./$(TARGET)
 
-doc:
+docs:
 	doxygen
 
 clean:
