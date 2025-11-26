@@ -1,7 +1,7 @@
 #include "display.hpp"
 #include "displaydata.hpp"
 
-
+#include "pgm_compat.hpp"
 
 
 
@@ -11,7 +11,6 @@ Display::Display ( ) {
   u8g2 = new U8G2_SH1106_128X64_NONAME_1_SW_I2C ( U8G2_R0, SCL, SDA );
   u8g2->begin ( );
 
-  data = (displayData*) malloc ( 20*sizeof(std::string("testdata")));
   updatePage.setDelay ( 2000 );
   state = WELCOME;
   actualPage = SYS;
@@ -72,38 +71,38 @@ void Display::drawContend ( ) {
   switch ( actualPage ) {
   case CPU:
     lineText[0].append ( displayString.t );
-    sReplace ( &lineText[0], data->cpu_t );
+    sReplace ( &lineText[0], data.cpu_t );
     lineText[1].append ( displayString.c );
-    sReplace ( &lineText[1], data->cpu_c );
+    sReplace ( &lineText[1], data.cpu_c );
     lineText[2].append ( displayString.u );
-    sReplace ( &lineText[2], data->cpu_u );
+    sReplace ( &lineText[2], data.cpu_u );
     break;;
 
   case LIQUID:
     lineText[0].append ( displayString.s );
-    sReplace ( &lineText[0], data->liquid_f );
+    sReplace ( &lineText[0], data.liquid_f );
     lineText[1].append ( displayString.s );
-    sReplace ( &lineText[1], data->liquid_p );
+    sReplace ( &lineText[1], data.liquid_p );
     lineText[2].append ( displayString.t );
-    sReplace ( &lineText[2], data->liquid_t );
+    sReplace ( &lineText[2], data.liquid_t );
     break;;
 
   case GPU:
     lineText[0].append ( displayString.t );
-    sReplace ( &lineText[0], data->gpu_t );
+    sReplace ( &lineText[0], data.gpu_t );
     lineText[1].append ( displayString.u );
-    sReplace ( &lineText[1], data->gpu_u );
+    sReplace ( &lineText[1], data.gpu_u );
     lineText[2].append ( displayString.p );
-    sReplace ( &lineText[2], data->gpu_p );
+    sReplace ( &lineText[2], data.gpu_p );
     break;;
 
   case SYS:
     lineText[0].append ( displayString.s );
-    sReplace ( &lineText[0], data->fan1_s );
+    sReplace ( &lineText[0], data.fan1_s );
     lineText[1].append ( displayString.s );
-    sReplace ( &lineText[1], data->fan2_s );
+    sReplace ( &lineText[1], data.fan2_s );
     lineText[2].append ( displayString.s );
-    sReplace ( &lineText[2], data->fan3_s );
+    sReplace ( &lineText[2], data.fan3_s );
     break;;
   }
 
@@ -150,8 +149,8 @@ void Display::next ( ) {
 
 
 
-void Display::setDisplayData ( displayData* dataN ) {
-  this->data = dataN;
+void Display::setDisplayData ( displayData *dataN ) {
+  this->data = *dataN;
 }
 
 

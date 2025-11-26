@@ -48,7 +48,7 @@ private:
   Timer updatePage;
   Page actualPage;
   displayStrings displayString;
-  displayData* data;
+  displayData data;
   const char* title[4] = {
     "CPU",
     "LIQUID",
