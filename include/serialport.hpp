@@ -15,7 +15,7 @@
 
 class SerialPort {
 private:
-  s_buffer::buffer received;
+  s_buffer::buffer *received;
   std::string err;
 
 protected:
@@ -30,6 +30,7 @@ public:
   void loop ( ) ;
 
   std::string recv ( );
+  bool send ( std::string str);
   std::string getErr ( );
 };
 
