@@ -109,7 +109,7 @@ void Display::drawContend ( ) {
 
   u8g2->setFont ( u8g_font_profont15r );
 
-  for (unsigned int counter = 0; counter < 3; counter++ )
+  for ( unsigned int counter = 0; counter < 3; counter++ )
     u8g2->drawStr ( 0, line[counter], lineText[counter].c_str ( ) );
 }
 
