@@ -52,12 +52,10 @@ bool SerialPort::send ( std::string str ) {
     return false;
   }
 
-  // Send the payload bytes
   if ( !str.empty ( ) ) {
     Serial.write ( ( const uint8_t* ) str.c_str ( ), str.size ( ) );
   }
 
-  // Ensure protocol terminator is sent if the caller didn't include it.
   if ( str.empty ( ) ||
         str.back ( ) != static_cast<char> ( s_buffer::protoLastByte ) ) {
     uint8_t term = static_cast<uint8_t> ( s_buffer::protoLastByte );
