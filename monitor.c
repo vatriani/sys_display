@@ -527,12 +527,23 @@ void writeSerial ( )
 	 iterator -= sizeof ( char8_t );
 	 memcpy ( iterator, ( void* ) &protoLastByte, 1);
 
+	 size_t total_len = ( size_t ) ( ( iterator - buffer ) + 1 );
+
 #ifdef DEBUG
-	 if ( isDebug )
-	 	 printf ( "%s\n", buffer );
+  if ( isDebug ) {
+		printf ( "Writing %zu bytes to serial: ", total_len );
+		for ( size_t i = 0; i < total_len; ++i )
+			printf ( "%02X ", ( unsigned char ) buffer[i] );
+		printf ( "\n" );
+	}
 #endif
 
-	 write ( serialPort, buffer, sizeof ( buffer ) );
+	 ssize_t written = write ( serialPort, buffer, total_len );
+	 if ( written < 0 ) {
+	 	 printf ( _( "writeSerial: Error %i from write: %s\n" ), errno, strerror ( errno ) );
+	 } else if ( ( size_t ) written != total_len ) {
+	 	 printf ( _( "writeSerial: Partial write %zd/%zu\n" ), written, total_len );
+	 }
 
 	 free ( buffer );
 }
