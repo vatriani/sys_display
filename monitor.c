@@ -763,7 +763,7 @@ int main (int argc, char** argv)
 				isDebug = 1;
 				break;
 			case 'p':
-				devicePath = malloc ( sizeof ( optarg ) * strlen ( optarg ) );
+				devicePath = malloc ( sizeof ( optarg ) * strlen ( optarg ) + 1 );
 				memcpy ( devicePath, optarg, strlen ( optarg ) );
 				isDevicePathChanged = 1;
 				break;
