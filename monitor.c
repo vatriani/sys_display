@@ -669,11 +669,14 @@ void close_monitor ( )
 void loop_monitor ( )
 {
 	while ( 1 ) {
-		getValues ( );
 
 #ifdef DEBUG
-	if ( isDebug )
-		debOutputBuffer ( );
+	if ( isDebug ) {
+		debFillBufferTestData ( );
+		//debOutputBuffer ( );
+	}
+	else
+		getValues ( );
 #endif
 
 		writeSerial ( );
