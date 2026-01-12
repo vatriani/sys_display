@@ -1,5 +1,4 @@
 name: C Monitor-app
-working-directory: ./host/
 
 permissions:
   contents: read
@@ -20,4 +19,5 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: make monitor
+      working-directory: ./host/
       run: make monitor
