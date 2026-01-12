@@ -23,7 +23,9 @@ jobs:
         with:
           python-version: '3.11'
       - name: Install PlatformIO Core
+        working-directory: ./arduino/
         run: pip install --upgrade platformio
 
       - name: Build PlatformIO Project
+        working-directory: ./arduino/
         run: make local_test
