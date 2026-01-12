@@ -2,8 +2,8 @@
   *  \file       monitor.c
   *  \brief      Implements the watchdog for accuiring and sending data.
   *  \author     Niels Neumann
-	*  \version    0.1.17
-  *  \date       2024
+	*  \version    0.2.1
+	*  \date       2026
   *  \copyright  GNU Public License v3
   */
 #include <stdlib.h>
@@ -20,7 +20,6 @@
 #include <time.h>
 
 #include "../lib/serial_protocol.h"
-//#include "include/defines.h"
 
 #define _(char) gettext(char)
 
@@ -579,7 +578,7 @@ License GPLv3+: GNU GPL Version 3 or later <http://gnu.org/licenses/gpl.html>.\
 /**
  * \brief DEBUG helper function to debug comunication
  */
-inline void debFillBufferTestData ( )
+void debFillBufferTestData ( )
 {
 	memcpy ( buff.cpuLines[0], "52", 3 );
 	memcpy ( buff.cpuLines[1], "5200", 5 );
