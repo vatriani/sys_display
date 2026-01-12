@@ -19,8 +19,10 @@
 #include <libintl.h>
 #include <time.h>
 
-#include "include/s_buffer.h"
-#include "include/defines.h"
+#include "../lib/serial_protocol.h"
+//#include "include/defines.h"
+
+#define _(char) gettext(char)
 
 
 
@@ -565,10 +567,10 @@ void showHelp ( )
  */
 void showVersion ( )
 {
-	printf ( _( "monitor 0.1\nCopyright (C) 2024 Niels Neumann  <vatriani.nn@googlemail.com\n\
+	printf ( "monitor 0.1\nCopyright (C) 2024 Niels Neumann  <vatriani.nn@googlemail.com\n\
 License GPLv3+: GNU GPL Version 3 or later <http://gnu.org/licenses/gpl.html>.\
 \nThis is free software: you are free to change and redistribute it.\
-\nThere is NO WARRANTY, to the extent permitted by law.\n\n" ) );
+\nThere is NO WARRANTY, to the extent permitted by law.\n\n" );
 }
 
 
@@ -742,7 +744,7 @@ int main (int argc, char** argv)
 	}
 
 	// init localisation
-	setlocale (LC_ALL, "");
+//	setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 

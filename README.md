@@ -19,40 +19,10 @@ The small screen switches automatically between displayed pages.
 - Water temperature
 
 ## Monitor programm on host system
-Deamon programm constantly checking system vitals with  
-
-`$ nvidia-smi --query-gpu=temperature.gpu,utilization.gpu,power.draw --format=csv -l 5`  
-`$ sensors -A -u`  
-`$ liquidctl status`  
-
-### Compile
-`$ make monitor`
-
-### Run watchdog
-`$ ./monitor`
-
-Monitor programm can also runned in background with `$ ./monitor &`.  
-For developing or debugging `$ ./monitor -D`.  
-If the monitor programm can't find the device, check for /dev/ttyUSB0. It's
-used as an default value. Changes with `$ ./monitor -p {device-path}`.
-
+Deamon programm constantly checking system vitals. Check host folder for more
+infos.
 
 
 ## nodemcu
-Simple solution for showing system vitals. An nodemcu would be an overkill, but
-an Arduino should do the same thing. (with some code changes)
-
-### Connecting the display
-- D1 => SDA
-- D2 => SCK
-- 3V => VCC
-- G => GND
-
-### Compile
-`$ make pio`
-
-## Upload to nodemcu
-`$ make upload`
-
-## Libaries used:
-- u8g2 Display libary - https://github.com/olikraus/u8g2
+Simple solution for showing system vitals. Check arduino folder for more
+infos.

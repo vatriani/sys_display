@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-#include "s_buffer.h"
+#include "../../lib/serial_protocol.h"
 
 
 
@@ -41,7 +41,6 @@ Monitor::~Monitor ( ) {
 
 
 
-
 std::vector<std::string> Monitor::SplitString ( std::string str, std::string delimeter) {
   std::vector<std::string> splittedStrings;
   std::string::size_type pos = str.find ( delimeter );
@@ -62,8 +61,8 @@ std::vector<std::string> Monitor::SplitString ( std::string str, std::string del
 
 void Monitor::parseSerial ( std::string recv ) {
   if ( !recv.empty ( ) ) {
-    if ( recv.front ( ) == s_buffer::protoVersion ) recv.erase ( 0, 2 ); else return;
-    if ( !recv.empty ( ) && recv.back ( ) == s_buffer::protoLastByte ) recv.pop_back ( );
+    if ( recv.front ( ) == serial_protocol::protoVersion ) recv.erase ( 0, 2 ); else return;
+    if ( !recv.empty ( ) && recv.back ( ) == serial_protocol::protoLastByte ) recv.pop_back ( );
   }
 
   std::vector<std::string> list = SplitString ( recv, ";" );

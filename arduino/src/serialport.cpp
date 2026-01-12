@@ -8,7 +8,7 @@
 
 SerialPort::SerialPort ( ) {
   newData = false;
-  received = ( s_buffer::buffer* ) malloc ( sizeof ( char8_t ) * s_buffer::protoMessLength );
+  received = ( serial_protocol::buffer* ) malloc ( sizeof ( char8_t ) * serial_protocol::protoMessLength );
 
   Serial.begin ( 115200 );
 
@@ -37,9 +37,9 @@ void SerialPort::loop ( ) {
 
 
 std::string SerialPort::recv ( ) {
-  char recvChar[s_buffer::protoMessLength];
+  char recvChar[serial_protocol::protoMessLength];
 
-  size_t len = Serial.readBytesUntil ( s_buffer::protoLastByte, recvChar, s_buffer::protoMessLength );
+  size_t len = Serial.readBytesUntil ( serial_protocol::protoLastByte, recvChar, serial_protocol::protoMessLength );
   if ( len <= 0 ) return std::string ( );
   return std::string ( recvChar, static_cast<size_t> ( len ) );
 }
@@ -57,8 +57,8 @@ bool SerialPort::send ( std::string str ) {
   }
 
   if ( str.empty ( ) ||
-        str.back ( ) != static_cast<char> ( s_buffer::protoLastByte ) ) {
-    uint8_t term = static_cast<uint8_t> ( s_buffer::protoLastByte );
+        str.back ( ) != static_cast<char> ( serial_protocol::protoLastByte ) ) {
+    uint8_t term = static_cast<uint8_t> ( serial_protocol::protoLastByte );
     Serial.write ( &term, 1 );
   }
 

@@ -11,11 +11,11 @@
 
 #include <string>
 
-#include "s_buffer.h"
+#include "../../lib/serial_protocol.h"
 
 class SerialPort {
 private:
-  s_buffer::buffer *received;
+  serial_protocol::buffer *received;
   std::string err;
 
 protected:

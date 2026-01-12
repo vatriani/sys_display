@@ -1,13 +1,13 @@
 /**
- *  \file      s_buffer.h
+ *  \file      serial_protocol.h
  *  \brief     Defines the data struct for communication.
  *  \author    Niels Neumann
  *  \version   0.1
- *  \date      2024
+ *  \date      2026
  *  \copyright GNU Public License v3
  */
-#ifndef S_BUFFER_H
-#define S_BUFFER_H
+#ifndef SERIAL_PROTOCOL_H
+#define SERIAL_PROTOCOL_H
 
 
 
@@ -21,7 +21,7 @@
 
 
 #ifdef __cplusplus
-namespace  s_buffer
+namespace  serial_protocol
 {
 #endif
 
@@ -42,6 +42,7 @@ static const char8_t protoError = 0x02;
 static const unsigned int protoStrLength = 5;
 /// max message length
 static const int protoMessLength = 12 * protoStrLength + 2;
+
 
 
 /**
@@ -82,6 +83,8 @@ struct _buffer {
 
 /// typedef for better readability
 typedef struct _buffer buffer;
+
+
 
 #ifdef __cplusplus
 }
