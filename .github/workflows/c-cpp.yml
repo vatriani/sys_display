@@ -1,4 +1,5 @@
 name: C Monitor-app
+working-directory: ./host/
 
 permissions:
   contents: read
@@ -15,7 +16,6 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-    working-directory: ./host/
 
     steps:
     - uses: actions/checkout@v4
